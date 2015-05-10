@@ -109,7 +109,7 @@ void ledON(char sel){
         case 'w':
     {
         Bean.setLed(255, 255, 255);
-        Serial.println("DEBUG: LED WITHE ON");
+        Serial.println("DEBUG: LED WHITE ON");
         break;
     }    
   }
