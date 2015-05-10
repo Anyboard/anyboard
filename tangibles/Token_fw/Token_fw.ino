@@ -1,5 +1,5 @@
-// This code tests JSON parsing for the Pawn's LED functionalities
-// Code based on RFDUINO hardware, uses String library (dynamic memory allocation)
+// Token's firmware working copy
+// Code based on RFDUINO hardware, uses C char arrays 
 
 #include <ArduinoJson.h>
 #include <RFduinoBLE.h>
@@ -9,41 +9,65 @@ int led_red = 1;
 int led_blue = 2;
 
 //Test JSON strings
-String OFF= "{\"device\":\"LED\",\"event\":\"off\"}";
-String GREEN = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"green\"}";
-String RED = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"red\"}";
-String BLUE = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"blue\"}";
-String WHITE = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"white\"}";
+char OFF[]= "{\"device\":\"LED\",\"event\":\"off\"}";
+char GREEN[] = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"green\"}";
+char RED[] = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"red\"}";
+char BLUE[] = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"blue\"}";
+char WHITE[] = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"white\"}";
 
 void setup() {
   //Serial.begin(9600); //Streams debug messagges over the serial port DEFAULT: OFF
   pinMode(led_green, OUTPUT);
   pinMode(led_red, OUTPUT);
   pinMode(led_blue, OUTPUT);
-  delay(500);
+ 
+  // Test LED on startup
+  parseJSON(OFF);
+  delay(300);
+  parseJSON(GREEN);
+  delay(300);
+  parseJSON(RED);
+  delay(300);
+  parseJSON(BLUE);
+  delay(300);
+  parseJSON(WHITE);
+  delay(300);
+  
+  //Initialise bluetooth
+  //Give unique identifier
+  RFduinoBLE.advertisementData = "PawnA";
+  //Start the BLE stack
+  RFduinoBLE.begin();
 }
 
 void loop() {
-  // Iterates different JSON messages
-  parseJSON(OFF);
-  delay(1000);
-  parseJSON(GREEN);
-  delay(1000);
-  parseJSON(RED);
-  delay(1000);
-  parseJSON(BLUE);
-  delay(1000);
-  parseJSON(WHITE);
-  delay(1000);
+
+}
+
+void RFduinoBLE_onAdvertisement()
+{
+}
+
+void RFduinoBLE_onConnect()
+{
+}
+
+void RFduinoBLE_onDisconnect()
+{
+}
+
+void RFduinoBLE_onReceive(char *data, int len)
+{
+ parseJSON(data);
 }
 
 //Parses JSON messages
-void parseJSON(String payload) {
+void parseJSON(char *payload) {
   char sel;
-  char json[200]; 
-  payload.toCharArray(json, 50);
+ // char json[200]; 
+ // payload.toCharArray(json, 50);
   StaticJsonBuffer<200> jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
+  JsonObject& root = jsonBuffer.parseObject(payload);
 
  // Serial.print("DEBUG: "); Serial.println(json);
   if (!root.success()) {
