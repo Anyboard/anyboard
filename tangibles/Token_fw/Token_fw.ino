@@ -22,8 +22,6 @@ void setup() {
   pinMode(led_blue, OUTPUT);
  
   // Test LED on startup
-  parseJSON(OFF);
-  delay(300);
   parseJSON(GREEN);
   delay(300);
   parseJSON(RED);
@@ -31,6 +29,8 @@ void setup() {
   parseJSON(BLUE);
   delay(300);
   parseJSON(WHITE);
+  delay(300);
+  parseJSON(OFF);
   delay(300);
   
   //Initialise bluetooth
