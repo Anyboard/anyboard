@@ -2,11 +2,8 @@
 // Code based on RFDUINO hardware, uses C char arrays 
 
 #include <ArduinoJson.h>
-#include <RFduinoBLE.h>
 
-int led_green = 0;
-int led_red = 1;
-int led_blue = 2;
+
 
 //Test JSON strings
 char OFF[]= "{\"device\":\"LED\",\"event\":\"off\"}";
@@ -17,9 +14,7 @@ char WHITE[] = "{\"device\":\"LED\",\"event\":\"on\",\"color\":\"white\"}";
 
 void setup() {
   //Serial.begin(9600); //Streams debug messagges over the serial port DEFAULT: OFF
-  pinMode(led_green, OUTPUT);
-  pinMode(led_red, OUTPUT);
-  pinMode(led_blue, OUTPUT);
+
  
   // Test LED on startup
   parseJSON(GREEN);
@@ -34,32 +29,13 @@ void setup() {
   delay(300);
   
   //Initialise bluetooth
-  //Give unique identifier
-  RFduinoBLE.advertisementData = "PawnA";
-  //Start the BLE stack
-  RFduinoBLE.begin();
 }
 
 void loop() {
 
 }
 
-void RFduinoBLE_onAdvertisement()
-{
-}
 
-void RFduinoBLE_onConnect()
-{
-}
-
-void RFduinoBLE_onDisconnect()
-{
-}
-
-void RFduinoBLE_onReceive(char *data, int len)
-{
- parseJSON(data);
-}
 
 //Parses JSON messages
 void parseJSON(char *payload) {
@@ -126,4 +102,4 @@ void ledON(char sel){
         Serial.println("DEBUG: LED WITHE ON");
         break;
     }    
-  }
+  }}

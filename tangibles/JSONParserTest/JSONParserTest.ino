@@ -4,9 +4,9 @@
 #include <ArduinoJson.h>
 #include <RFduinoBLE.h>
 
-int led_green = 0;
-int led_red = 1;
-int led_blue = 2;
+int led_green = 4;
+int led_red = 2;
+int led_blue = 3;
 
 //Test JSON strings
 String OFF= "{\"device\":\"LED\",\"event\":\"off\"}";
