@@ -10,7 +10,7 @@ Communication Protocol in use [ASCII](https://docs.google.com/spreadsheets/d/1Pq
 
 * Cloud - FUTURE WORK
 * Phone - See [https://github.com/tomfa/anyboard-lib](https://github.com/tomfa/anyboard-lib) for current implementation
-* Tokens - Work in Progress (See below)
+* Tokens - Work in Progress, some example tagged BEANH are based on Lightblue Bean hardware and need to be ported to RFDUINO ardure, more below..
 
 ## Token Specs (Updated August '15)
 
