@@ -1,0 +1,230 @@
+.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: sans-serif;
+}
+
+button {
+    display: block;
+    padding: 1.2rem 1.4rem;
+    height: 3.8rem;
+    margin-bottom: 0.8rem;
+    border: none;
+    outline: 0;
+}
+
+.discover-button {
+    color: white;
+    background-color: black;
+}
+
+.grey {
+    color: black;
+    background-color: #AAA;
+}
+
+.green {
+    color: black;
+    background-color: #FAA;
+}
+
+.red {
+    color: black;
+    background-color: #FAA;
+}
+
+.blue {
+    color: white;
+    background-color: #0070ff;
+}
+
+.next-button {
+    color: white;
+    background-color: green;
+    min-width: 8rem;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.panel {
+    display: none;
+    padding: 0 1rem;
+    max-height: 100%;
+    overflow-y: scroll;
+    padding-top: 4.5rem;
+}
+.panel.panel-start {
+    display: block;
+}
+
+p.answer {
+    font-family: sans-serif;
+    font-size: 1.4rem;
+    box-sizing: border-box;
+    margin: 0;
+    /* padding: 0; */
+}
+
+html { font-size: 62.5%;}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    overflow-y: scroll;
+}
+
+img.splash {
+    max-width: 100%;
+    margin: 0 auto;
+    max-height: 1%;
+}
+
+li {
+    font-size: 1.3rem; 
+}
+
+h5 {
+    background-color: #444;
+    color: #fff;
+    margin-top: 0;
+    padding: 0.3rem;
+    position: fixed;
+    font-size: 1rem;
+    width: 100%;
+    /* height: 4rem; */
+    border-bottom: 0.15rem solid #000;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    /* float: right; */
+    background-color: #444;
+    width: 100%;
+    /* height: 4rem; */
+    margin-left: -1rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    /* padding-left: 1rem; */
+    /* padding-right: 4rem; */
+}
+
+p.question-text {
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+p.alternative {
+    padding: 1rem;
+    padding-left: 1.8rem;
+}
+
+button.discover-bluetooth {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+button.token {
+    /* margin: 0 auto; */
+    min-width: 8rem;
+    /* outline: 0; */
+}
+
+h4 {
+    margin-top: 1.8rem;
+    margin-bottom: 1.8rem;
+    font-size: 2rem;
+}
+
+p.alternative.yellow {
+    background-color: #F1F133;
+}
+
+.green {
+    background-color: #88DD88;
+}
+
+.purple {
+    background-color: #CC29F3;
+    color: white;
+}
+
+.footer .next-button {
+    margin: 0;
+    display: inline;
+    /* min-width: 0; */
+    font-size: 1.2rem;
+    float: right;
+    margin-right: 0.3rem;
+}
+
+button.black {
+    background-color: #434343;
+    color: white;
+}
+
+#game-init p.help-text {
+    margin-top: 7rem;
+    text-align: center;
+}
+
+p > button.black.center {
+    margin-top: 0.8rem;
+}
+
+p.game-instruction {
+    font-size: 1rem;
+    font-style: italic;
+    margin-top: 2rem;
+}
+
+span.player-icon {
+    display: inline-block;
+    height: 3.8rem;
+    width: 1.2rem;
+    margin-left: 0.5rem;
+    /* position: static; */
+    /* right: 0; */
+    padding: 1.2rem 1.4rem;
+}
+
+div.token button.token {
+    display: inline-block;
+}
+
+.token {}
+
+button.player-icon {
+    display: inline-block;
+    margin-left: 0.5rem;
+    width: 3.8rem;
+    /* margin-bottom: 0; */
+    height: 3.8rem;
+    border: 0.2rem solid black;
+    /* border-left: 0.2rem solid black; */
+    /* border-top: 1px solid black; */
+    /* box-sizing: border-box; */
+    padding: 0;
+    margin-right: 1rem;
+}
+
+.white {
+    background-color: white;
+    color: black;
+}
+
+.result {
+    font-size: 1.5rem;
+}

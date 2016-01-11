@@ -1,0 +1,355 @@
+<!-- **************************************************************************
+# 	NAME: index.html
+# 	AUTHOR: Matthias Monnier (matthias.monnier@gmail.com)
+# 	DATE: 16/12/2015
+#
+# 	Evothings application demo for the Anyboard pawn token
+#
+**************************************************************************-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no
+		initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<title>AnyboardJS Vibration Motor Demo</title>
+
+	<style>
+		@import 'ui/css/evothings-app.css';
+
+		p.topic {
+			font-weight: bold;
+		}
+	</style>
+
+    <!-- cordova.js based -->
+	<script src="cordova.js"></script>
+
+    <!-- AnyboardJS libraries -->
+	<script src="dist/anyboard.js"></script>
+
+    <!-- Bluetooth driver and dependencies-->
+    <script src="libs/evothings/evothings.js"></script>
+    <script src="libs/evothings/easyble/easyble.js"></script>
+    <script src="drivers/discovery.evothings.bluetooth.js"></script>
+	<script src="drivers/bean.evothings.bluetooth.js"></script>
+    <script src="drivers/rfduino.evothings.bluetooth.js"></script>
+	
+	<!-- We've used jquery for quick development -->
+    <script src="libs/jquery-1.11.3.min.js"></script>
+	
+	<script>
+	    $(document).ready(function(){
+			$("#summary").show();
+			$("#main").hide();
+			app.initiate();
+        });
+	</script>
+	
+	<script>
+        var app = {
+		    devices: {},
+			tiles : {
+				1: "white",
+				2: "white"
+			},
+			
+			locations: {
+				1: "red", // 12228
+				2: "black", // 5737
+				3: "yellow", // 18330
+				4: "green", // 4560
+				5: "purple", // 8550
+				6: "blue", // 6306
+				7: "brown", // 5920
+				8: "grey" // 8436
+			},
+			
+			initiate: function() {
+				var handleTokenTap = function(token) {
+					AnyBoard.Logger.log(" TAP Detect ");
+					$("#tap").css("background-color","blue");
+					setTimeout(function () {
+						$("#tap").css("background-color", "#99C2FF");
+					}, 300);
+				};
+				var handleTokenDoubleTap = function(token) {
+					AnyBoard.Logger.log(" DOUBLE TAP Detect ");
+					$("#double_tap").css("background-color","blue");
+					setTimeout(function () {
+						$("#double_tap").css("background-color", "#99C2FF");
+					}, 300);
+				};
+				var handleTokenShake = function(token) {
+					AnyBoard.Logger.log(" SHAKE Detect ");
+					$("#shake").css("background-color","blue");
+					setTimeout(function () {
+						$("#shake").css("background-color", "#99C2FF");
+					}, 300);
+				};
+				var handleTokenTilt = function(token) {
+					AnyBoard.Logger.log(" TILT Detect ");
+					$("#tilt").css("background-color","blue");
+					setTimeout(function () {
+						$("#tilt").css("background-color", "#99C2FF");
+					}, 550);
+				};
+				AnyBoard.TokenManager.onTokenEvent("TAP", handleTokenTap);
+				AnyBoard.TokenManager.onTokenEvent("DOUBLE_TAP", handleTokenDoubleTap);
+				AnyBoard.TokenManager.onTokenEvent("SHAKE", handleTokenShake);
+				AnyBoard.TokenManager.onTokenEvent("TILT", handleTokenTilt);
+				
+				var handleTokenMove = function(token, constraint, options) {
+					AnyBoard.Logger.log("Moved to tile " + constraint);
+					app.tiles[1] = app.tiles[2];
+					app.tiles[2] = app.locations[constraint];
+					$('.previous_tile').css("background-color", app.tiles[1]);
+					$('.current_tile').css("background-color", app.tiles[2]);
+				};
+				
+				var handleTokenTokenEvent = function(token) {
+					AnyBoard.Logger.log("Token-Token event triggered.");
+					$("#tokentoken").css("background-color","blue");
+					setTimeout(function () {
+						$("#tokentoken").css("background-color", "#99C2FF");
+					}, 550);
+				};
+
+				AnyBoard.TokenManager.onTokenConstraintEvent("MOVE_TO", handleTokenMove);
+				AnyBoard.TokenManager.onTokenTokenEvent("TTEVENT", handleTokenTokenEvent);
+			},
+			
+            // Discover bluetooth tokens in proximity
+            discover: function() {
+                var self = this;
+                AnyBoard.TokenManager.scan(
+                    // success function to be executed upon _each_ token that is discovered
+                    function(token) {
+                        self.addDiscovered(token);
+                    },
+                    // function to be executed upon failure
+                    function(errorCode) {
+                        console.log(errorCode)
+                    }
+                );
+            },
+
+            // Function to be executed upon having discovered a token
+            addDiscovered: function(token) {
+                if (!this.devices[token.name]) {
+                    this.devices[token.name] = token;
+
+                    // Add button for token to body
+                    //document.body.innerHTML += '<button type="button" id="' + token.name + '" onclick="app.connect(' + "'" + token.name + "'" + ')" class="grey">' + token.name + ' </button><br />';
+					$("#summary").append('<button type="button" id="' + token.name + '" onclick="app.connect(' + "'" + token.name + "'" + ')" class="grey">' + token.name + ' </button><br />');
+					
+					// Add listener to be executed if the token connects
+                    token.on('connect', function() {
+                        document.getElementById(token.name).className = 'green';
+						$("#token_feedback").append('<button type="button" onclick="app.vibrate('+ "'" + token.name + "'" +')" class="indicator3"> Vibrate </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.count('+ "'" + token.name + "'" +')" class="indicator3"> Count </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.displayX('+ "'" + token.name + "'" +')"class="indicator3"> Display a cross </button><br />');
+                    });
+
+                    // Add listener to be executed if the token disconnects
+                    token.on('disconnect', function() {
+                        document.getElementById(token.name).className = 'red';
+                    });
+                }
+
+            },
+
+            // Attempts to connect to token.
+            connect: function(tokenName) {
+                var token = this.devices[tokenName];
+
+                // If already connecting, stop
+                if (document.getElementById(tokenName).className == 'blue')
+                    return;
+				                
+				// If already connected, attempt to send green led command
+                if (document.getElementById(tokenName).className == 'green') {
+                    this.sendVibrationCmd(token);
+                    return;
+                }
+				
+                // Signal that we're attempting to connect
+                document.getElementById(tokenName).className = 'blue';
+
+                // Send connect command. 
+                token.connect(app.next_panel());
+				
+				// Add button for token to body
+                //$("#summary").append('<button type="button" onclick="app.next_panel()" class="black"> Next </button>');
+					
+            },
+
+            // Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
+            sendVibrationCmd: function(token) {
+
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the VIBRATE command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the VIBRATE command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.vibrate([100], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+			
+			// Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
+            sendCountCmd: function(token) {
+
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the COUNT command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the COUNT command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.count([1], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+			
+			sendDisplayXCmd: function(token) {
+
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the DISPLAY_X command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the DISPLAY_X command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.displayX([1], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+			
+			next_panel: function(){
+				$("#summary").hide();
+				$("#main").show();
+			},
+			
+			vibrate : function(tokenName){
+				var token = this.devices[tokenName];
+				this.sendVibrationCmd(token);
+			},
+			
+			count : function(tokenName){
+				var token = this.devices[tokenName];
+				this.sendCountCmd(token);
+			},
+			
+			displayX : function(tokenName){
+				var token = this.devices[tokenName];
+				this.sendDisplayXCmd(token);
+			}
+
+	    };
+	</script>
+
+</head>
+
+<body ontouchstart="">
+	<div id="summary">
+		<h1>AnyboardPawn Demo</h1>
+		<div>
+			<p>
+				Demo of the pawn token that uses all type of events : 1) Token solo, 2) Token feedback, 3) Token-token, 4) Token constraint
+			</p>
+			<p>
+				Turn on the token.
+				Click on the black button to discover devices.
+				Click on the RFduino name button to attempt to connect. It will turn <em>blue</em> to signal connection is pending, and <em>green</em> when connected. <em>Red</em> signals it being/having disconnected.
+			</p>
+
+			<p>
+				Click on the green boxes to trigger event on the token.
+				Interact with the token and the events will appear on the phone (light blue boxes will turn dark blue).
+			</p>
+		</div>
+
+		<button type="button" class="black" onclick="app.discover()">
+			Discover Bluetooth devices
+		</button>
+
+	</div>
+	<div id="main">
+		<div id="token_solo"> 
+			<h1> Token Solo Event </h1>
+			<div id="ind"> 
+				<div id="tap" class="indicator">
+					Tap
+				</div>
+				<div id="double_tap" class="indicator">
+					Double T.
+				</div>
+				<div id="shake" class="indicator">
+					Shake
+				</div>
+				<div id="tilt" class="indicator"">
+					Tilt
+				</div>
+			</div>
+		</div>
+		<div id="token_feedback"> 
+			<h1> Token Feedback </h1>
+			
+		</div>
+
+		<div id="token_constraint"> 
+			<h1> Token Constraint Event </h1>
+			<div id="tiles">
+				<div id="color" class="previous_tile">
+				</div>
+				<div class="arrow">
+					&#8594;
+				</div>
+				<div id="color" class="current_tile">
+				</div>
+			</div>
+		</div>
+		
+		<div id="token_token"> 
+			<h1> Token-Token Event </h1>
+			<div id="ind"> 
+				<div id="tokentoken" class="indicator2">
+					Next to another token
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+</html>
+
+    
