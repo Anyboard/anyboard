@@ -20,6 +20,7 @@
     <!-- Bluetooth driver and dependencies -->
     <script src="libs/evothings/evothings.js"></script>
     <script src="libs/evothings/easyble/easyble.js"></script>
+	<script src="drivers/bean.evothings.bluetooth.js"></script>
     <script src="drivers/discovery.evothings.bluetooth.js"></script>
     <script src="drivers/rfduino.evothings.bluetooth.js"></script>
 
@@ -99,7 +100,6 @@
                         </ul>
                     </li>
                     <li>Place both tokens back on question tile for a new question</li>
-                    <li>First player to 10 points win</li>
                 </ol>
             </p>
         </div>
@@ -127,7 +127,7 @@
     <div class="panel panel-summary" id="summary">
         <div class="content"></div>
         <div class="footer question-footer">
-            <button type="button" class="init-game next-button">
+			<button type="button" class="init-game next-button">
                 Play again
             </button>
         </div>

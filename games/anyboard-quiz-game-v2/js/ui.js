@@ -66,11 +66,12 @@ var ui = {
         var playersHTML = "";
         for (var index in d.players) {
             playersHTML += '<div class="result"><button class="player-icon ' + d.players[index].color +
-            '">&nbsp;</button>' + d.players[index].points + ' poeng</div>';
+            '">&nbsp;</button>' + d.players[index].points + ' points</div>';
             d.players[index].points = 0;
         }
         $('#summary .content').append(playersHTML)
         d.currentQuestionPos = undefined;
-
+		//logic.print(token);
+		//$('#summary .content').append('<button type="button">Print the rewards !</button>');
     }
 };

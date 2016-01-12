@@ -73,7 +73,11 @@ var logic = {
                 );
                 d.players.push(token.player);
                 $(document.getElementById(token.address)).next().addClass(token.color);
-                token.ledOn(token.color);
+                for(i=0; i<4; i++)
+				{
+					token.ledOn('white')
+					token.ledOn(token.color);
+				}
             });
 
             // Add listener to be executed if the token disconnects
@@ -156,8 +160,8 @@ var logic = {
             if (d.players.hasOwnProperty(key)) {
                 var player = d.players[key];
                 var answer = player.location;
-                if (question.alternatives.hasOwnProperty(answer-2)) {
-                    if (question.alternatives[answer-2].correct)
+                if (question.alternatives.hasOwnProperty(answer-3)) {
+                    if (question.alternatives[answer-3].correct)
                         player.points += 1;
                 }
             }
