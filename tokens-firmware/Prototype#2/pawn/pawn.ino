@@ -75,7 +75,7 @@ int face1 = 0;
 
 // BOARD CONSTANTS
 #define ACC_INT1_PIN 4 // Pin where the acceleromter interrupt1 is connected
-#define VIBRATING_M_PIN     2 // Pin where the vibrating motor is connected
+#define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
