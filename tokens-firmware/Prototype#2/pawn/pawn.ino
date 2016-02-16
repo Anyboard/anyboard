@@ -74,17 +74,18 @@ uint8_t current_sector_ID = 0;
 int face1 = 0;
 
 // BOARD CONSTANTS
-#define ACC_INT1_PIN 4 // Pin where the acceleromter interrupt1 is connected
+#define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
 #define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
 TokenConstraintEvent tokenConstraint = TokenConstraintEvent();
 TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
-TokenTokenEvent tokenToken = TokenTokenEvent();
+//TokenTokenEvent tokenToken = TokenTokenEvent();
 
 void setup(void) 
 {
+  //
   Serial.begin(9600);
   
   // Enable interrupts :
@@ -97,13 +98,13 @@ void setup(void)
   tokenSolo.accelConfig();
 
   // Config of the capacitive sensor
-  tokenToken.capConfig();
+  //tokenToken.capConfig();
 
   // Config of the LED matrix
   tokenFeedback.matrixConfig();
   
   // Configure the RFduino BLE properties
-  RFduinoBLE.deviceName = "RFduino";
+  RFduinoBLE.deviceName = "Any_PAWN";
   RFduinoBLE.txPowerLevel = -20;
 
   // Start the BLE stack
@@ -152,12 +153,12 @@ void loop(void)
     }
 
 /************************************************************/
- /*   // Sector detection if the token is on the board
-    if (inactivity) 
+    // Sector detection if the token is on the board
+    if (inactivity) //change true with inactivity when accelerometer is connected
     {
       tokenConstraint.rgb_sensor.getData();
     }
-    //Serial.println(tokenConstraint.rgb_sensor.ct);
+    Serial.println(tokenConstraint.rgb_sensor.ct);
 
     // Location of the pawn in function of the color temperature (ct)
     current_sector_ID = tokenConstraint.locate(current_sector_ID, tokenConstraint.rgb_sensor.ct); 
@@ -169,13 +170,16 @@ void loop(void)
         sendData[1] = current_sector_ID;
         sendData[2] = last_sector_ID;
         RFduinoBLE.send((char*) sendData, 3);
+
+        if(current_sector_ID==8)
+          tokenFeedback.displaySmile();
         
         // Update sector_ID variables
         last_sector_ID = current_sector_ID;
     }
     
 /************************************************************/
-    // Detection of the token token event
+/*    // Detection of the token token event
     tokenToken.capTestProximity(&face1); 
     if(face1==1)
     {
