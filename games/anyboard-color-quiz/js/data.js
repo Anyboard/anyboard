@@ -48,14 +48,14 @@ var d = {
             "question": "What color is a flamingo?",
             "answer": "pink"
         },
-        {
+/*        {
             "question": "Jimi Hendrix had a song called \"___ haze\"",
             "answer": "purple"
         },
         {
             "question": "What color is an eggplant (aubergine)?",
             "answer": "purple"
-        },
+        },*/
         {
             "question": "What color does #0000FF represent?",
             "answer": "blue"
@@ -72,5 +72,6 @@ var d = {
     devices: {},
     listeners: {},
     players: [],
-    colors: ['white', 'green', 'red', 'blue'] // Player colors
+    colors: ['white', 'green', 'red', 'blue'], // Player colors
+	pointsAwarded: true
 };
