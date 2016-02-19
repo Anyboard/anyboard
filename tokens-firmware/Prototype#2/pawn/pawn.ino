@@ -15,8 +15,8 @@
 
 #include <TokenFeedback.h>
 #include <TokenConstraintEvent.h>
-#include <TokenSoloEvent.h>
-#include <TokenTokenEvent.h>
+//#include <TokenSoloEvent.h>
+//#include <TokenTokenEvent.h>
 
 // TOKEN FIRMWARE METADATA
 #define NAME    "AnyBoard Pawn"
@@ -80,13 +80,13 @@ int face1 = 0;
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
 TokenConstraintEvent tokenConstraint = TokenConstraintEvent();
-TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
+//TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 //TokenTokenEvent tokenToken = TokenTokenEvent();
 
 void setup(void) 
 {
   //
-  Serial.begin(9600);
+  //Serial.begin(9600);
   
   // Enable interrupts :
   interrupts();
@@ -95,7 +95,7 @@ void setup(void)
   //tokenConstraint.sensorConfig();
   
   // Config of the accelerometer
-  tokenSolo.accelConfig();
+  //tokenSolo.accelConfig();
 
   // Config of the capacitive sensor
   //tokenToken.capConfig();
@@ -104,7 +104,7 @@ void setup(void)
   tokenFeedback.matrixConfig();
   
   // Configure the RFduino BLE properties
-  RFduinoBLE.deviceName = "Any_PAWN";
+  RFduinoBLE.deviceName = "Any_PAWNA";
   RFduinoBLE.txPowerLevel = -20;
 
   // Start the BLE stack
@@ -116,7 +116,7 @@ void setup(void)
 void loop(void) 
 {  
 /************************************************************/
-    // Token solo event detection
+   /* // Token solo event detection
     if(digitalRead(ACC_INT1_PIN)) 
     {
       intSource = tokenSolo.accel.readRegister(ADXL345_REG_INT_SOURCE);
@@ -154,7 +154,7 @@ void loop(void)
 
 /************************************************************/
     // Sector detection if the token is on the board
-    if (inactivity) //change true with inactivity when accelerometer is connected
+    if (true) //change true with inactivity when accelerometer is connected
     {
       tokenConstraint.rgb_sensor.getData();
     }
