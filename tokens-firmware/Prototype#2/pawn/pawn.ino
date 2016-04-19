@@ -17,6 +17,7 @@
 #include "libs/TF/TokenFeedback.h"
 #include "libs/TS/TokenSoloEvent.h"
 #include "libs/TC/TokenConstraintEvent.h"
+#include "protocol.h"
 
 // TOKEN FIRMWARE METADATA
 #define NAME    "AnyBoard Pawn"
@@ -30,33 +31,6 @@ bool connected;
 uint8_t cmd;
 int i;
 int len;
-
-// COMMANDS
-const uint8_t GET_NAME             = 32;
-const uint8_t GET_VERSION          = 33;
-const uint8_t GET_UUID             = 34;
-const uint8_t HAS_LED              = 64;
-const uint8_t HAS_LED_COLOR        = 65;
-const uint8_t HAS_VIBRATION        = 66;
-const uint8_t HAS_COLOR_DETECTION  = 67;
-const uint8_t HAS_LED_SCREEN       = 68;
-const uint8_t HAS_RFID             = 71;
-const uint8_t HAS_NFC              = 72;
-const uint8_t HAS_ACCELEROMETER    = 73;
-const uint8_t HAS_TEMPERATURE      = 74;
-const uint8_t LED_OFF2             = 128;
-const uint8_t LED_ON2              = 129;
-const uint8_t LED_BLINK            = 130;
-const uint8_t READ_COLOR           = 136;
-const uint8_t MOVE                 = 194;
-const uint8_t TTEVENT              = 195;
-const uint8_t VIBRATE 			       = 200;
-const uint8_t TAP				           = 201;
-const uint8_t DOUBLE_TAP		       = 202;
-const uint8_t SHAKE				         = 203;
-const uint8_t TILT                 = 204;
-const uint8_t COUNT                = 205;
-const uint8_t DISPLAY_X            = 206;
 
 // Variables for Token Solo Event
 volatile uint8_t intSource = 0; // byte with interrupt informations
@@ -72,7 +46,7 @@ uint8_t current_sector_ID = 0;
 
 // BOARD CONSTANTS
 #define ACC_INT1_PIN 4 // Pin where the acceleromter interrupt1 is connected
-#define VIBRATING_M_PIN     2 // Pin where the vibrating motor is connected
+#define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
@@ -101,7 +75,6 @@ void setup(void)
 
   // Start the BLE stack
   RFduinoBLE.begin();
-
   Serial.println("Setup OK!");
 }
 

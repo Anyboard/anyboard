@@ -25,6 +25,7 @@ class TokenFeedback {
 		void displayX();
 		void displayDigit(int digit);
 		void matrixConfig();
+    void displaySmile();
 
 		Adafruit_8x8matrix matrix;
 
@@ -150,7 +151,7 @@ static const uint8_t PROGMEM
     B00011000,
     B00100100,
     B01000010,
-    B10000001 };
+    B10000001 },
     happy_bmp[] =
 { B00000000,
   B01100110,
@@ -168,5 +169,5 @@ sad_bmp[] =
   B10011001,
   B10100101,
   B01000010,
-  B00111100 };	
+  B00111100 };
 #endif
