@@ -13,10 +13,10 @@
 #include <RFduinoBLE.h>
 #include <string.h>
 
-#include <TokenFeedback.h>
-#include <TokenConstraintEvent.h>
-//#include <TokenSoloEvent.h>
-//#include <TokenTokenEvent.h>
+#include "lib/TF/TokenFeedback.h"
+
+#include "lib/TS/TokenSoloEvent.h"
+#include "lib/TC/TokenConstraintEvent.h"
 
 // TOKEN FIRMWARE METADATA
 #define NAME    "AnyBoard Pawn"
@@ -74,71 +74,70 @@ uint8_t current_sector_ID = 0;
 int face1 = 0;
 
 // BOARD CONSTANTS
-#define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
-#define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
+#define ACC_INT1_PIN 4 // Pin where the acceleromter interrupt1 is connected
+#define VIBRATING_M_PIN     2 // Pin where the vibrating motor is connected
 
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
 TokenConstraintEvent tokenConstraint = TokenConstraintEvent();
-//TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
+TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 //TokenTokenEvent tokenToken = TokenTokenEvent();
 
-void setup(void) 
+void setup(void)
 {
-  //
-  //Serial.begin(9600);
-  
+  Serial.begin(9600);
+
   // Enable interrupts :
   interrupts();
 
   // Config of the rgb_sensor
   //tokenConstraint.sensorConfig();
-  
+
   // Config of the accelerometer
-  //tokenSolo.accelConfig();
+  tokenSolo.accelConfig();
 
   // Config of the capacitive sensor
   //tokenToken.capConfig();
 
   // Config of the LED matrix
   tokenFeedback.matrixConfig();
-  
+
   // Configure the RFduino BLE properties
-  RFduinoBLE.deviceName = "Any_PAWNA";
+  RFduinoBLE.deviceName = "RFduino";
   RFduinoBLE.txPowerLevel = -20;
 
   // Start the BLE stack
   RFduinoBLE.begin();
-  
+
   Serial.println("Setup OK!");
 }
-    
-void loop(void) 
-{  
+
+void loop(void)
+{
 /************************************************************/
-   /* // Token solo event detection
-    if(digitalRead(ACC_INT1_PIN)) 
+    // Token solo event detection
+    if(digitalRead(ACC_INT1_PIN))
     {
       intSource = tokenSolo.accel.readRegister(ADXL345_REG_INT_SOURCE);
-      
+
       // Computation of data from the accelerometer to detect events
       tokenSolo.accelComputation(tab, bitRead(intSource, 3), bitRead(intSource, 4), bitRead(intSource, 5), bitRead(intSource, 6), &inactivity, &single_tap, &double_tap, &shake);
     }
 
     // Sends the events detected to the game engine
-    if (single_tap) 
+    if (single_tap)
     {
       sendData[0] = TAP;
       RFduinoBLE.send((char*) sendData, 1);
       single_tap = 0;
     }
-    else if (double_tap) 
+    else if (double_tap)
     {
       sendData[0] = DOUBLE_TAP;
       RFduinoBLE.send((char*) sendData, 1);
       double_tap = 0;
     }
-    else if (shake) 
+    else if (shake)
     {
       sendData[0] = SHAKE;
       RFduinoBLE.send((char*) sendData, 1);
@@ -153,34 +152,31 @@ void loop(void)
     }
 
 /************************************************************/
-    // Sector detection if the token is on the board
-    if (true) //change true with inactivity when accelerometer is connected
+ /*   // Sector detection if the token is on the board
+    if (inactivity)
     {
       tokenConstraint.rgb_sensor.getData();
     }
-    Serial.println(tokenConstraint.rgb_sensor.ct);
+    //Serial.println(tokenConstraint.rgb_sensor.ct);
 
     // Location of the pawn in function of the color temperature (ct)
-    current_sector_ID = tokenConstraint.locate(current_sector_ID, tokenConstraint.rgb_sensor.ct); 
+    current_sector_ID = tokenConstraint.locate(current_sector_ID, tokenConstraint.rgb_sensor.ct);
 
     // Sends sectors ID of the sector that has been left and the sector that has been reached
-    if (current_sector_ID != last_sector_ID) 
+    if (current_sector_ID != last_sector_ID)
 	{
         sendData[0] = MOVE;
         sendData[1] = current_sector_ID;
         sendData[2] = last_sector_ID;
         RFduinoBLE.send((char*) sendData, 3);
 
-        if(current_sector_ID==8)
-          tokenFeedback.displaySmile();
-        
         // Update sector_ID variables
         last_sector_ID = current_sector_ID;
     }
-    
+
 /************************************************************/
 /*    // Detection of the token token event
-    tokenToken.capTestProximity(&face1); 
+    tokenToken.capTestProximity(&face1);
     if(face1==1)
     {
       Serial.println("TTEVENT");
@@ -188,25 +184,25 @@ void loop(void)
       RFduinoBLE.send((char*) sendData, 1);
       face1 = 0;
     }
-    
+
 /************************************************************/
     delay(500); // Important delay, do not delete it !
 }
 
 // Code that executes everytime token is being connected to
-void RFduinoBLE_onConnect() 
+void RFduinoBLE_onConnect()
 {
     connected = true;
 }
 
 // Code that executes everytime token is being disconnected from
-void RFduinoBLE_onDisconnect() 
+void RFduinoBLE_onDisconnect()
 {
     connected = false;
 }
 
 // Sends data to the connected client
-void send_uint8(uint8_t *data, int length) 
+void send_uint8(uint8_t *data, int length)
 {
     char charData[length];
     for (i = 0; i < length; i++) {
@@ -216,7 +212,7 @@ void send_uint8(uint8_t *data, int length)
 }
 
 // Sends data (uint8 + String) to the connected client
-void send_string(uint8_t command, char* string) 
+void send_string(uint8_t command, char* string)
 {
     len = strlen(string);
     sendData[0] = command;
@@ -227,7 +223,7 @@ void send_string(uint8_t command, char* string)
 }
 
 // Code to run upon receiving data over bluetooth
-void RFduinoBLE_onReceive(char *data, int length) 
+void RFduinoBLE_onReceive(char *data, int length)
 {
     // Stores the first integer to cmd variable
     cmd = data[0];
@@ -245,7 +241,7 @@ void RFduinoBLE_onReceive(char *data, int length)
 }
 
 // Executes command
-void parse(uint8_t command) 
+void parse(uint8_t command)
 {
     // Resets the outcoming data array
     memset(sendData, 0, sizeof(sendData));
@@ -253,7 +249,7 @@ void parse(uint8_t command)
     // Sets the command as the first data to send
     sendData[0] = command;
 
-    switch (command) 
+    switch (command)
     {
         case GET_NAME:
             send_string(GET_NAME, NAME);
