@@ -37,37 +37,37 @@ uint8_t TokenConstraintEvent::locate(uint8_t current_sector_ID, float ct)
 {
 	if (ct==2661)
     {
-		Serial.println("Yellow");
+		//Serial.println("Yellow");
         return 3;
     }
     else if (ct==3296)
     {
-        Serial.println("Green");
+        //Serial.println("Green");
         return 4;
     }
     else if (ct==5201)
     {
-        Serial.println("Purple");
+        //Serial.println("Purple");
         return 5;
     }
     else if (ct==9011)
     {
-		Serial.println("Dark_blue");
+		//Serial.println("Dark_blue");
         return 6;
     }
     else if (ct==7106)
     {
-        Serial.println("Light_blue");
+        //Serial.println("Light_blue");
         return 2;
     }
     else if (ct==2153)
     {
-        Serial.println("Orange");
+        //Serial.println("Orange");
         return 7;
     }
     else if (ct==2915)
     {
-        Serial.println("Pink");
+        //Serial.println("Pink");
         return 8;
     }
     else

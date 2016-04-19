@@ -55,7 +55,7 @@ TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 
 void setup(void)
 {
-  Serial.begin(9600);
+  //Serial.begin(9600);
 
   // Enable interrupts :
   interrupts();
@@ -133,6 +133,7 @@ void loop(void)
          sendData[1] = current_sector_ID;
          sendData[2] = last_sector_ID;
          RFduinoBLE.send((char*) sendData, 3);
+         Serial.print("MOVE_TO: "); Serial.print(sendData[0],DEC); Serial.print(" , "); Serial.print(sendData[1],DEC); Serial.print(" , "); Serial.println(sendData[2],DEC);
 
          // Update sector_ID variables
          last_sector_ID = current_sector_ID;

@@ -1,6 +1,6 @@
 <!-- **************************************************************************
 # 	NAME: index.html
-# 	AUTHOR: Matthias Monnier (matthias.monnier@gmail.com)
+# 	AUTHOR: Matthias Monnier (matthias.monnier@gmail.com), Simone Mora (simonem@ntnu.no)
 # 	DATE: 16/12/2015
 #
 # 	Evothings application demo for the Anyboard pawn token
@@ -16,7 +16,7 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no
 		initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 
-	<title>AnyboardJS Vibration Motor Demo</title>
+	<title>AnyboardJS DEMO</title>
 
 	<style>
 		@import 'ui/css/evothings-app.css';
@@ -38,10 +38,10 @@
     <script src="drivers/discovery.evothings.bluetooth.js"></script>
 	<script src="drivers/bean.evothings.bluetooth.js"></script>
     <script src="drivers/rfduino.evothings.bluetooth.js"></script>
-	
+
 	<!-- We've used jquery for quick development -->
     <script src="libs/jquery-1.11.3.min.js"></script>
-	
+
 	<script>
 	    $(document).ready(function(){
 			$("#summary").show();
@@ -49,7 +49,7 @@
 			app.initiate();
         });
 	</script>
-	
+
 	<script>
         var app = {
 		    devices: {},
@@ -57,22 +57,21 @@
 				1: "white",
 				2: "white"
 			},
-			
+
 			locations: {
-				1: "red", // 12228
-				2: "black", // 5737
+				2: "aqua", // 5737
 				3: "yellow", // 18330
 				4: "green", // 4560
 				5: "purple", // 8550
 				6: "blue", // 6306
-				7: "brown", // 5920
-				8: "grey" // 8436
+				7: "orange", // 5920
+				8: "pink" // 8436
 			},
-			
+
 			initiate: function() {
 				var handleTokenTap = function(token) {
 					AnyBoard.Logger.log(" TAP Detect ");
-					$("#tap").css("background-color","blue");
+					$("#tap").css("background-color","red");
 					setTimeout(function () {
 						$("#tap").css("background-color", "#99C2FF");
 					}, 300);
@@ -102,15 +101,16 @@
 				AnyBoard.TokenManager.onTokenEvent("DOUBLE_TAP", handleTokenDoubleTap);
 				AnyBoard.TokenManager.onTokenEvent("SHAKE", handleTokenShake);
 				AnyBoard.TokenManager.onTokenEvent("TILT", handleTokenTilt);
-				
+
 				var handleTokenMove = function(token, constraint, options) {
-					AnyBoard.Logger.log("Moved to tile " + constraint);
+					AnyBoard.Logger.log("Moved to tilee " + constraint);
 					app.tiles[1] = app.tiles[2];
 					app.tiles[2] = app.locations[constraint];
 					$('.previous_tile').css("background-color", app.tiles[1]);
 					$('.current_tile').css("background-color", app.tiles[2]);
 				};
-				
+
+				//TT Events not implmented
 				var handleTokenTokenEvent = function(token) {
 					AnyBoard.Logger.log("Token-Token event triggered.");
 					$("#tokentoken").css("background-color","blue");
@@ -122,7 +122,7 @@
 				AnyBoard.TokenManager.onTokenConstraintEvent("MOVE_TO", handleTokenMove);
 				AnyBoard.TokenManager.onTokenTokenEvent("TTEVENT", handleTokenTokenEvent);
 			},
-			
+
             // Discover bluetooth tokens in proximity
             discover: function() {
                 var self = this;
@@ -146,7 +146,7 @@
                     // Add button for token to body
                     //document.body.innerHTML += '<button type="button" id="' + token.name + '" onclick="app.connect(' + "'" + token.name + "'" + ')" class="grey">' + token.name + ' </button><br />';
 					$("#summary").append('<button type="button" id="' + token.name + '" onclick="app.connect(' + "'" + token.name + "'" + ')" class="grey">' + token.name + ' </button><br />');
-					
+
 					// Add listener to be executed if the token connects
                     token.on('connect', function() {
                         document.getElementById(token.name).className = 'green';
@@ -170,22 +170,22 @@
                 // If already connecting, stop
                 if (document.getElementById(tokenName).className == 'blue')
                     return;
-				                
+
 				// If already connected, attempt to send green led command
                 if (document.getElementById(tokenName).className == 'green') {
                     this.sendVibrationCmd(token);
                     return;
                 }
-				
+
                 // Signal that we're attempting to connect
                 document.getElementById(tokenName).className = 'blue';
 
-                // Send connect command. 
+                // Send connect command.
                 token.connect(app.next_panel());
-				
+
 				// Add button for token to body
                 //$("#summary").append('<button type="button" onclick="app.next_panel()" class="black"> Next </button>');
-					
+
             },
 
             // Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
@@ -209,7 +209,7 @@
 					errorCallback  // function to be executed in case of failure to send command to token
 				);
             },
-			
+
 			// Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
             sendCountCmd: function(token) {
 
@@ -231,7 +231,7 @@
 					errorCallback  // function to be executed in case of failure to send command to token
 				);
             },
-			
+
 			sendDisplayXCmd: function(token) {
 
                 // Function to be executed when LED is successfully turned on
@@ -252,22 +252,22 @@
 					errorCallback  // function to be executed in case of failure to send command to token
 				);
             },
-			
+
 			next_panel: function(){
 				$("#summary").hide();
 				$("#main").show();
 			},
-			
+
 			vibrate : function(tokenName){
 				var token = this.devices[tokenName];
 				this.sendVibrationCmd(token);
 			},
-			
+
 			count : function(tokenName){
 				var token = this.devices[tokenName];
 				this.sendCountCmd(token);
 			},
-			
+
 			displayX : function(tokenName){
 				var token = this.devices[tokenName];
 				this.sendDisplayXCmd(token);
@@ -303,9 +303,9 @@
 
 	</div>
 	<div id="main">
-		<div id="token_solo"> 
+		<div id="token_solo">
 			<h1> Token Solo Event </h1>
-			<div id="ind"> 
+			<div id="ind">
 				<div id="tap" class="indicator">
 					Tap
 				</div>
@@ -320,12 +320,12 @@
 				</div>
 			</div>
 		</div>
-		<div id="token_feedback"> 
+		<div id="token_feedback">
 			<h1> Token Feedback </h1>
-			
+
 		</div>
 
-		<div id="token_constraint"> 
+		<div id="token_constraint">
 			<h1> Token Constraint Event </h1>
 			<div id="tiles">
 				<div id="color" class="previous_tile">
@@ -337,10 +337,10 @@
 				</div>
 			</div>
 		</div>
-		
-		<div id="token_token"> 
+
+		<div id="token_token">
 			<h1> Token-Token Event </h1>
-			<div id="ind"> 
+			<div id="ind">
 				<div id="tokentoken" class="indicator2">
 					Next to another token
 				</div>
@@ -351,5 +351,3 @@
 </body>
 
 </html>
-
-    
