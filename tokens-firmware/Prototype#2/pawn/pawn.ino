@@ -116,7 +116,7 @@ void loop(void)
   }
 
   /************************************************************/
-  /*   // Sector detection if the token is on the board
+     // Sector detection if the token is on the board
      if (inactivity)
      {
        tokenConstraint.rgb_sensor.getData();
@@ -188,7 +188,6 @@ void RFduinoBLE_onReceive(char *data, int length)
   for (i = 1; i < length; i++) {
     getData[i - 1] = data[i];
   }
-
   // Executes the command
   parse(cmd);
 }
