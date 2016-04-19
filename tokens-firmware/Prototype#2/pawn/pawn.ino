@@ -164,7 +164,6 @@ void loop(void)
          // Update sector_ID variables
          last_sector_ID = current_sector_ID;
      }
-
     /************************************************************/
 
   delay(500); // Important delay, do not delete it !

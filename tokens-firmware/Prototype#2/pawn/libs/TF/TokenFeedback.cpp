@@ -18,16 +18,17 @@ TokenFeedback::TokenFeedback(int pin_vibrating_motor)
 {
 	pinMode(_pin_motor, OUTPUT);
 	digitalWrite(_pin_motor, LOW);
-	
+
 	Adafruit_8x8matrix* matrix = new Adafruit_8x8matrix();
 }
- 
+
 /**************************************************************************
 #	Initiate the sensor
 **************************************************************************/
 void TokenFeedback::matrixConfig()
 {
 	matrix.begin(0x70);
+	matrix.setBrightness(5);
 }
 
 /**************************************************************************
@@ -71,7 +72,7 @@ void TokenFeedback::displayCount()
   }
   matrix.clear();
   matrix.writeDisplay();
-  
+
 }
 
 /**************************************************************************
@@ -83,6 +84,26 @@ void TokenFeedback::displayX()
 	matrix.drawBitmap(0, 0, X2_bmp, 8, 8, LED_ON);
 	matrix.writeDisplay();
 	delay(1000);
+	matrix.clear();
+	matrix.writeDisplay();
+}
+
+/**************************************************************************
+#	Display a smile on the screen
+**************************************************************************/
+void TokenFeedback::displaySmile()
+{
+	matrix.clear();
+	matrix.drawBitmap(0, 0, happy_bmp, 8, 8, LED_ON);
+	matrix.writeDisplay();
+	digitalWrite(_pin_motor, HIGH);
+	delay(100);
+	digitalWrite(_pin_motor, LOW);
+	delay(100);
+	digitalWrite(_pin_motor, HIGH);
+	delay(100);
+	digitalWrite(_pin_motor, LOW);
+	delay(3000);
 	matrix.clear();
 	matrix.writeDisplay();
 }
@@ -124,7 +145,7 @@ void TokenFeedback::displayDigit(int digit)
     case 9:
       matrix.drawBitmap(0, 0, nine_bmp, 8, 8, LED_ON);
       break;
-    default: 
+    default:
       Serial.println('Not a digit');
       matrix.drawBitmap(0, 0, null_bmp, 8, 8, LED_ON);
     break;

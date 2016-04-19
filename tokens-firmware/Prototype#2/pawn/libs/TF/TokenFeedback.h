@@ -25,12 +25,12 @@ class TokenFeedback {
 		void displayX();
 		void displayDigit(int digit);
 		void matrixConfig();
-		
+
 		Adafruit_8x8matrix matrix;
-		
+
 	  private:
 		int _pin_motor;
-		
+
 };
 
 static const uint8_t PROGMEM
@@ -151,4 +151,22 @@ static const uint8_t PROGMEM
     B00100100,
     B01000010,
     B10000001 };
+    happy_bmp[] =
+{ B00000000,
+  B01100110,
+  B01100110,
+  B00000000,
+  B00000000,
+  B01000010,
+  B00111100,
+  B00000000 },
+sad_bmp[] =
+{ B00111100,
+  B01000010,
+  B10100101,
+  B10000001,
+  B10011001,
+  B10100101,
+  B01000010,
+  B00111100 };	
 #endif

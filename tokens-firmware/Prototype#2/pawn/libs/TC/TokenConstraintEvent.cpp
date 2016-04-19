@@ -35,30 +35,40 @@ void TokenConstraintEvent::sensorConfig()
 **************************************************************************/
 uint8_t TokenConstraintEvent::locate(uint8_t current_sector_ID, float ct)
 {
-	if (ct > 2500 && ct < 2900)
+	if (ct==2661)
     {
-		Serial.print("Yellow");
+		Serial.println("Yellow");
         return 3;
     }
-    else if (ct > 4320 && ct < 4340)
+    else if (ct==3296)
     {
-        Serial.print("Green");
+        Serial.println("Green");
         return 4;
     }
-    else if (ct > 4340 && ct < 4500)
+    else if (ct==5201)
     {
-        Serial.print("Purple");
+        Serial.println("Purple");
         return 5;
     }
-    else if (ct > 5500 && ct < 6200)
+    else if (ct==9011)
     {
-		Serial.print("Dark blue");
+		Serial.println("Dark_blue");
         return 6;
     }
-    else if (ct > 4000 && ct < 4100)
+    else if (ct==7106)
     {
-        Serial.print("Black");
+        Serial.println("Light_blue");
         return 2;
+    }
+    else if (ct==2153)
+    {
+        Serial.println("Orange");
+        return 7;
+    }
+    else if (ct==2915)
+    {
+        Serial.println("Pink");
+        return 8;
     }
     else
     {
