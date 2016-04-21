@@ -55,6 +55,7 @@ TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 
 void setup(void)
 {
+  //SERIAL INTERFACE FOR DEBUGGING PURPOSES
   Serial.begin(9600);
 
   // Enable interrupts :
@@ -121,7 +122,7 @@ void loop(void)
      {
        tokenConstraint.rgb_sensor.getData();
      }
-     //Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
+     Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
 
      // Location of the pawn in function of the color temperature (ct)
      current_sector_ID = tokenConstraint.locate(current_sector_ID, map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
