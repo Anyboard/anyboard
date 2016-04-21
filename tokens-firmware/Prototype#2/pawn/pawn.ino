@@ -55,13 +55,13 @@ TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 
 void setup(void)
 {
-  //Serial.begin(9600);
+  Serial.begin(9600);
 
   // Enable interrupts :
   interrupts();
 
   // Config of the rgb_sensor
-  //tokenConstraint.sensorConfig();
+  tokenConstraint.sensorConfig();
 
   // Config of the accelerometer
   tokenSolo.accelConfig();
@@ -93,26 +93,26 @@ void loop(void)
   if (single_tap)
   {
     sendData[0] = TAP;
-    RFduinoBLE.send((char*) sendData, 1);
+    //RFduinoBLE.send((char*) sendData, 1);
     single_tap = 0;
   }
   else if (double_tap)
   {
     sendData[0] = DOUBLE_TAP;
-    RFduinoBLE.send((char*) sendData, 1);
+    //RFduinoBLE.send((char*) sendData, 1);
     double_tap = 0;
   }
   else if (shake)
   {
     sendData[0] = SHAKE;
-    RFduinoBLE.send((char*) sendData, 1);
+    //RFduinoBLE.send((char*) sendData, 1);
     shake = 0;
   }
   if (tokenSolo.tiltComputation())
   {
     Serial.println("TILT");
     sendData[0] = TILT;
-    RFduinoBLE.send((char*) sendData, 1);
+    //RFduinoBLE.send((char*) sendData, 1);
   }
 
   /************************************************************/
@@ -121,11 +121,12 @@ void loop(void)
      {
        tokenConstraint.rgb_sensor.getData();
      }
-     //Serial.println(tokenConstraint.rgb_sensor.ct);
+     //Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
 
      // Location of the pawn in function of the color temperature (ct)
-     current_sector_ID = tokenConstraint.locate(current_sector_ID, tokenConstraint.rgb_sensor.ct);
-
+     current_sector_ID = tokenConstraint.locate(current_sector_ID, map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
+     Serial.println(current_sector_ID);
+      
      // Sends sectors ID of the sector that has been left and the sector that has been reached
      if (current_sector_ID != last_sector_ID)
     {
@@ -134,7 +135,8 @@ void loop(void)
          sendData[2] = last_sector_ID;
          RFduinoBLE.send((char*) sendData, 3);
          Serial.print("MOVE_TO: "); Serial.print(sendData[0],DEC); Serial.print(" , "); Serial.print(sendData[1],DEC); Serial.print(" , "); Serial.println(sendData[2],DEC);
-
+         RFduinoBLE.sendInt((int) tokenConstraint.rgb_sensor.ct); 
+         //RFduinoBLE.sendFloat(tokenConstraint.rgb_sensor.ct); 
          // Update sector_ID variables
          last_sector_ID = current_sector_ID;
      }

@@ -299,7 +299,7 @@
                 case rfduinoBluetooth._CMD_CODE.MOVE:
                     var currentTile = uint8array[1];
                     var previousTile = uint8array[2];
-                    token.trigger('MOVE', {"value": currentTile, "newTile": currentTile, "oldTile": previousTile});
+                    token.trigger('MOVE', {"value": currentTile, "newTile": currentTile, "oldTile": previousTile}); //this is the one in use
                     token.trigger('MOVE_TO', {'meta-eventType': 'token-constraint' ,"constraint": currentTile});
                     token.trigger('MOVE_FROM', {'meta-eventType': 'token-constraint' ,"constraint": previousTile});
 
@@ -375,7 +375,7 @@
                     break;
 				case rfduinoBluetooth._CMD_CODE.DISPLAY_X:
                     token.trigger('DISPLAY_X')
-                    break;	
+                    break;
 				case rfduinoBluetooth._CMD_CODE.TILT:
                     token.trigger('TILT', {'meta-eventType': 'token'});
                     break;
@@ -465,15 +465,15 @@
     rfduinoBluetooth.vibrate = function (token, value, win, fail) {
         this._COMMANDS.VIBRATE(token, new Uint8Array(value), win, fail);
     };
-	
+
 	rfduinoBluetooth.count = function (token, value, win, fail) {
         this._COMMANDS.COUNT(token, new Uint8Array(value), win, fail);
     };
-	
+
 	rfduinoBluetooth.displayX = function (token, value, win, fail) {
         this._COMMANDS.DISPLAY_X(token, new Uint8Array(value), win, fail);
     };
-	
+
     rfduinoBluetooth.ledBlink = function (token, value, win, fail) {
         value = value || 'white';
 
