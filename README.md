@@ -9,6 +9,6 @@ Communication Protocol in use [ASCII](https://docs.google.com/spreadsheets/d/1Pq
 ## Directory list
 
 * Cloud - FUTURE WORK
-* Phone - See [https://github.com/tomfa/anyboard-lib](https://github.com/tomfa/anyboard-lib) for current implementation
+* Phone - AnyboardJS library, see [anyboard-library](anyboard-library)
 * Tokens - Work in Progress, some example tagged BEANH are based on Lightblue Bean hardware and need to be ported to RFDUINO ardure, more below..
 
