@@ -1,25 +1,35 @@
 var logic = {
     initiate: function() {
         var handleTokenMove = function(token, constraint, options) {
-            AnyBoard.Logger.log(token.player + " moved to tile " + constraint);
+            AnyBoard.Logger.log(token.player + " moved to tilee " + constraint);
             token.player.location = constraint;
+
+
+
+
+
+            // If the token is the only one, we will not expect any Token-Token events to occur before all (1) token
+            // is placed on a tile. Therefore we check if the token is the only one, and trigger the TT-event manually
+            // if it is
+            if (token.player.location === 1) {
+
+              hyper.log("handleTokenTokenTouch");
+              if (typeof d.currentQuestionPos === "undefined") ui.activatePanel('game');
+              else ui.nextQuestion();
+
+                //handleTokenTokenTouch(token, token);
+            }
 
             if (logic.everyOneHasAnswered()) {
                 ui.showAnswer();
                 return;
             }
 
-            // If the token is the only one, we will not expect any Token-Token events to occur before all (1) token
-            // is placed on a tile. Therefore we check if the token is the only one, and trigger the TT-event manually
-            // if it is
-            if (token.player.location === 5) {
-                handleTokenTokenTouch(token, token);
-            }
         };
 
         var handleTokenTokenTouch = function(initiatingToken, respondingToken, options) {
 			hyper.log("TTevent");
-            if (respondingToken.player.location === 5) {
+            if (respondingToken.player.location === 1) {
                 hyper.log("handleTokenTokenTouch");
                 if (typeof d.currentQuestionPos === "undefined") ui.activatePanel('game');
                 else ui.nextQuestion();
@@ -65,7 +75,7 @@ var logic = {
 					//don't assign player color etc. to printer
 					return;
 				}
-				
+
                 document.getElementById(token.address).className = 'green token';
                 token.color = d.colors.pop();
                 token.player = new AnyBoard.Player(
@@ -118,7 +128,7 @@ var logic = {
         document.getElementById(tokenAddress).className = 'blue token';
 
         // Send connect command.
-        token.connect();		
+        token.connect();
     },
 
     startGame: function(){
@@ -171,7 +181,7 @@ var logic = {
 		if(d.pointsAwarded){
 			return;
 		}
-		
+
         var question = logic.getCurrentQuestion();
         for (var key in d.players) {
             if (d.players.hasOwnProperty(key)) {
@@ -187,13 +197,13 @@ var logic = {
 
     everyOneHasAnswered: function() {
         var tokenSet = AnyBoard.TokenManager.tokens;
-        for (var key in tokenSet) {			
+        for (var key in tokenSet) {
             if (tokenSet.hasOwnProperty(key) && tokenSet[key].isConnected()) {
 				//ignoring any printer connected
 				if (tokenSet[key].driver.hasOwnProperty('print')){
 					continue;
 				}
-				
+
                 if (tokenSet[key].player.location === 5) {
 					hyper.log("Everyone has answered: False");
                     return false;
@@ -212,20 +222,20 @@ var logic = {
         }
         return numOfConnected;
     },
-	
+
 	printCertificate: function() {
 		hyper.log("Printing certificate");
-		
+
         var tokenSet = AnyBoard.TokenManager.tokens;
 		var printerToken = undefined;
-        for (var key in tokenSet) {			
+        for (var key in tokenSet) {
             if (tokenSet.hasOwnProperty(key) && tokenSet[key].isConnected()) {
 				if (tokenSet[key].driver.hasOwnProperty('print')){
 					printerToken = tokenSet[key];
 				}
 			}
 		}
-		
+
 		if(printerToken){
 			var score = d.players[0].points;
 			printerToken.print("##n##cCongratulations!##n##cYou scored " + score + " out of 4 points!##n##n##lBrought to you by AnyBoard##f##f##f##f");

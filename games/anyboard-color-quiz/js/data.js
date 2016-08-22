@@ -1,14 +1,14 @@
 // short for data. "data" variable seems to be overwritten, perhaps by evothings tools, and unavailable
 var d = {
     locations: {
-        1: "red", // 12228
-        2: "light-blue", // 5737
-        3: "yellow", // 18330
-        4: "green", // 4560
+        9: "red", // 12228
+        0: "light-blue", // 5737
+        2: "yellow", // 18330
+        1: "green", // 4560
         5: "purple", // 8550
-        6: "blue", // 6306
+        3: "blue", // 6306
         7: "orange", // 5920
-        8: "pink" // 8436
+        4: "pink" // 8436
     },
     currentQuestionPos: undefined,
     questions: [

@@ -36,37 +36,37 @@ void TokenConstraintEvent::sensorConfig()
 uint8_t TokenConstraintEvent::locate(uint8_t current_sector_ID, float ct)
 {
 
-	if (ct<=89 && ct>=87)
+	if (ct<=81 && ct>=79)
     {
 		//Serial.println("Light blue");
         return 0;
     }
-    else if (ct<=59 && ct>=58)  //59
+    else if (ct<=71 && ct>=70)  //59
     {
         //Serial.println("Green");
         return 1;
     }
-    else if (ct<=38 && ct>=36)
+    else if (ct<=43 && ct>=41)
     {
         //Serial.println("Yellow");
         return 2;
     }
-    else if (ct<=83 && ct>=81)
+    else if (ct<=73 && ct>=72)
     {
 		//Serial.println("blue");
         return 3;
     }
-    else if (ct<=46 && ct>=44)
+    else if (ct<=62 && ct>=60)
     {
         //Serial.println("pink");
         return 4;
     }
-    else if (ct<=61 && ct>=60)
+    else if (ct<=56 && ct>=54)
     {
         //Serial.println("purple");
         return 5;
     }
-    else if (ct<=35 && ct>=33)
+    else if (ct<=46 && ct>=44)
     {
         //Serial.println("orange");
         return 6;
