@@ -266,7 +266,7 @@ void parse(uint8_t command)
       send_uint8(sendData, 1);
       break;
     case DISPLAY_DIGIT:
-      tokenFeedback.diplayDigit(getData[0]);
+      tokenFeedback.displayDigit(getData[0]);
       send_uint8(sendData,1);
       break;
     default:
