@@ -17,6 +17,7 @@ const uint8_t LED_ON2              = 129;
 const uint8_t LED_BLINK            = 130;
 const uint8_t READ_COLOR           = 136;
 
+//EVENTS
 const uint8_t MOVE                 = 194; //C2
 
 const uint8_t TAP				           = 201; //C9
@@ -24,6 +25,7 @@ const uint8_t DOUBLE_TAP		       = 202; //CA
 const uint8_t SHAKE				         = 203; //CB
 const uint8_t TILT                 = 204; //CC
 
+//COMMANDS
 const uint8_t COUNT                = 205; //CD
 const uint8_t DISPLAY_X            = 206; //CE
 const uint8_t VIBRATE              = 200; //C8

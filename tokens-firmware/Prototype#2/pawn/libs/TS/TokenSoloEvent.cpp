@@ -82,7 +82,7 @@ void TokenSoloEvent::accelComputation(int* tab, int bit3, int bit4, int bit5, in
         }
         else
         {
-          //Serial.println("DOUBLE_TAP");
+          Serial.println("DOUBLE_TAP");
           *double_tap = 1;
         }
       }
@@ -90,12 +90,12 @@ void TokenSoloEvent::accelComputation(int* tab, int bit3, int bit4, int bit5, in
       { // when a double tap is detected also a signle tap is deteced. we use an else here so that we only print the double tap
         if(tab[1] && tab[0])
         {
-          //Serial.println("SHAKE");
+          Serial.println("SHAKE");
           *shake = 1;
         }
         else
         {
-          //Serial.println("SINGLE_TAP");
+          Serial.println("SINGLE_TAP");
   		  *single_tap = 1;
         }
       }
