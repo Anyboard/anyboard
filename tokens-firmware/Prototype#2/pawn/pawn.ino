@@ -14,9 +14,9 @@
 #include <RFduinoBLE.h>
 #include <string.h>
 
-#include "libs/TF/TokenFeedback.h"
-#include "libs/TS/TokenSoloEvent.h"
-#include "libs/TC/TokenConstraintEvent.h"
+#include <TokenFeedback.h>
+#include <TokenSoloEvent.h>
+#include <TokenConstraintEvent.h>
 #include "protocol.h"
 
 // TOKEN FIRMWARE METADATA
@@ -266,8 +266,8 @@ void parse(uint8_t command)
       send_uint8(sendData, 1);
       break;
     case DISPLAY_DIGIT:
-      tokenFeedback.diplayDigit(getData[0]);
-      send_uint8(sendData,1);
+      tokenFeedback.displayDigit(getData[0]);
+      send_uint8(sendData, 1);
       break;
     default:
       sendData[0] = 0;
