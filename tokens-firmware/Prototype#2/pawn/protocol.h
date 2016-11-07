@@ -29,3 +29,4 @@ const uint8_t TILT                 = 204; //CC
 const uint8_t COUNT                = 205; //CD
 const uint8_t DISPLAY_X            = 206; //CE
 const uint8_t VIBRATE              = 200; //C8
+const uint8_t DISPLAY_DIGIT		   = 207;
