@@ -18,7 +18,7 @@ The folder *demo_application_evothings* contains all the files needed for the de
 ![Schematic](https://github.com/Matth26/anyboardpawn/blob/master/schematic_fritzing.png)
 
 ## libraries
-In order to use all the components listed in the hardware part, some Adafruit's and support libraries have been used. You can find these libraries in the *libraries* folder. Refer to the ([manual installation section in the official Arduino library guide](https://www.arduino.cc/en/Guide/Libraries#toc5)) to install the libraries on your system.
+In order to use all the components listed in the hardware part, some Adafruit's and support libraries have been used. You can find these libraries in the *libraries* folder. Refer to the [manual installation section in the official Arduino library guide](https://www.arduino.cc/en/Guide/Libraries#toc5) to install the libraries on your system.
 
 ### Adafruit_ADXL345
 For the ADXL345 the Adafruit_ADXL345 Arduino's library is used ([Adafruit_ADXL345](https://github.com/adafruit/Adafruit_ADXL345)). 
