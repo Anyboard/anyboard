@@ -8,11 +8,11 @@
 #
 **************************************************************************/
 
-#include <TokenConstraintEvent.h>
-   
+#include "TokenConstraintEvent.h"
+
 /**************************************************************************
 #	Constructor
-**************************************************************************/   
+**************************************************************************/
 TokenConstraintEvent::TokenConstraintEvent()
 {
 	tcs34725 rgb_sensor = tcs34725();
@@ -35,30 +35,41 @@ void TokenConstraintEvent::sensorConfig()
 **************************************************************************/
 uint8_t TokenConstraintEvent::locate(uint8_t current_sector_ID, float ct)
 {
-	if (ct > 2500 && ct < 2900)
+
+	if (ct<=81 && ct>=79)
     {
-		Serial.print("Yellow");
+		//Serial.println("Light blue");
+        return 0;
+    }
+    else if (ct<=71 && ct>=70)  //59
+    {
+        //Serial.println("Green");
+        return 1;
+    }
+    else if (ct<=43 && ct>=41)
+    {
+        //Serial.println("Yellow");
+        return 2;
+    }
+    else if (ct<=73 && ct>=72)
+    {
+		//Serial.println("blue");
         return 3;
     }
-    else if (ct > 4320 && ct < 4340)
+    else if (ct<=62 && ct>=60)
     {
-        Serial.print("Green");
+        //Serial.println("pink");
         return 4;
     }
-    else if (ct > 4340 && ct < 4500)
+    else if (ct<=56 && ct>=54)
     {
-        Serial.print("Purple");
+        //Serial.println("purple");
         return 5;
     }
-    else if (ct > 5500 && ct < 6200)
+    else if (ct<=46 && ct>=44)
     {
-		Serial.print("Dark blue");
+        //Serial.println("orange");
         return 6;
-    }
-    else if (ct > 4000 && ct < 4100)
-    {
-        Serial.print("Black");
-        return 2;
     }
     else
     {
@@ -66,7 +77,3 @@ uint8_t TokenConstraintEvent::locate(uint8_t current_sector_ID, float ct)
         //Serial.print("Non trouve");
     }
 }
-
-
-
-
