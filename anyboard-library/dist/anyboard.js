@@ -1,3 +1,10 @@
+/**************************************************************************
+# 	NAME: anyboard.js
+# 	AUTHOR: Tomas Fagerbekk
+#	CONTRIBUTOR: Matthias Monnier
+#
+**************************************************************************/
+
 "use strict";
 
 /**
@@ -1055,6 +1062,8 @@ AnyBoard.TokenManager = {
     listeners: {
         tokenEvent: {},
         onceTokenEvent: {},
+		tokenFeedbackEvent: {},
+		onceTokenFeedbackEvent: {},
         tokenTokenEvent: {},
         onceTokenTokenEvent: {},
         tokenConstraintEvent: {},
@@ -1257,6 +1266,56 @@ AnyBoard.TokenManager.onceTokenEvent = function(eventName, callbackFunction) {
     this.listeners.onceTokenEvent[eventName].push(callbackFunction);
 };
 
+/**
+ * Adds a callbackFunction to be executed always when a token feedback event is triggered.
+ * A token feedback event is an action that we want to make on the single token to give
+ * information to the player (ex : vibrate)
+ * @param {string} eventName name of event to listen to
+ * @param {tokenEventCallback} callbackFunction function to be executed
+ * @example
+ * var cb = function (initToken, event, options) {
+ *      console.log(initToken + " was " + event + "'ed ");
+ * };
+ *
+ * TokenManager.onTokenEvent("LIFT", cb);
+ *
+ * // prints "existingToken was LIFT'ed"
+ * existingToken.trigger("LIFT", {"meta-eventType": "token"};
+ *
+ * // prints "existingToken was LIFT'ed"
+ * existingToken.trigger("LIFT", {"meta-eventType": "token"};
+ */
+AnyBoard.TokenManager.onTokenFeedbackEvent = function(eventName, callbackFunction) {
+    AnyBoard.Logger.debug('Added listener to T-Feedback-event: ' + eventName, this);
+    if (!this.listeners.tokenFeedbackEvent[eventName])
+        this.listeners.tokenFeedbackEvent[eventName] = [];
+    this.listeners.tokenFeedbackEvent[eventName].push(callbackFunction);
+};
+
+/**
+ * Adds a callbackFunction to be executed next time a token event is triggered
+ * @param {string} eventName name of event to listen to
+ * @param {tokenEventCallback} callbackFunction function to be executed
+ * @example
+ * var cb = function (initToken, event, options) {
+ *      console.log(initToken + " was " + event + "'ed ");
+ * };
+ *
+ * TokenManager.onceTokenEvent("LIFT", cb);
+ *
+ * // prints "existingToken was LIFT'ed"
+ * existingToken.trigger("LIFT", {"meta-eventType": "token"};
+ *
+ * // No effect
+ * existingToken.trigger('LIFT');
+ */
+AnyBoard.TokenManager.onceTokenFeedbackEvent = function(eventName, callbackFunction) {
+    AnyBoard.Logger.debug('Added onceListener to T-Feedback-event: ' + eventName, this);
+    if (!this.listeners.onceTokenFeedbackEvent[eventName])
+        this.listeners.onceTokenFeedbackEvent[eventName] = [];
+    this.listeners.onceTokenFeedbackEvent[eventName].push(callbackFunction);
+};
+
 
 /**
  * Base class for tokens. Should be used by communication driver upon AnyBoard.TokenManager.scan()
@@ -1361,8 +1420,8 @@ AnyBoard.BaseToken.prototype.disconnect = function() {
 };
 
 /**
- * Trigger an event on a token. Also used to trigger special events (Token, Token-Token and Token-Eonstraint-events) by
- * specifying 'meta-eventType' = 'token', 'token-token' or 'token-constraint' in eventOptions.
+ * Trigger an event on a token. Also used to trigger special events (Token, Token-Feedback Token-Token and Token-Constraint-events) by
+ * specifying 'meta-eventType' = 'token', 'token-feedback', 'token-token' or 'token-constraint' in eventOptions.
  * @param {string} eventName name of event
  * @param {object} [eventOptions] (*optional)* dictionary of parameters and values
  * @example
@@ -1412,8 +1471,12 @@ AnyBoard.BaseToken.prototype.trigger = function(eventName, eventOptions) {
                 baseTrigger(AnyBoard.TokenManager.listeners.onceTokenConstraintEvent, eventName, [self, eventOptions.constraint, eventOptions]);
                 AnyBoard.TokenManager.listeners.onceTokenConstraintEvent[eventName] = [];
             } else {
-                AnyBoard.warn('Attempting to trigger token-token event type, but missing constraint option', this);
+                AnyBoard.warn('Attempting to trigger token-constraint event type, but missing constraint option', this);
             }
+        } else if (eventOptions['meta-eventType'] == 'token-feedback') {
+            baseTrigger(AnyBoard.TokenManager.listeners.tokenFeedbackEvent, eventName, [self, eventOptions]);
+            baseTrigger(AnyBoard.TokenManager.listeners.onceTokenFeedbackEvent, eventName, [self, eventOptions]);
+            AnyBoard.TokenManager.listeners.onceTokenFeedbackEvent[eventName] = [];
         } else {
             AnyBoard.warn('Attempting to trigger invalid event type: ' + eventOptions['meta-eventType'], this);
         }
@@ -1721,6 +1784,54 @@ AnyBoard.BaseToken.prototype.ledOn = function(value, win, fail) {
         this.driver.ledOn(this, value, win, fail);
     }
 };
+
+/**
+ * Sets color on token
+ * @param {string|Array} value string with color name or array of [red, green, blue] values 0-255
+ * @param {stdNoParamCallback} [win] *(optional)* callback function to be called upon successful execution
+ * @param {stdErrorCallback} [fail] *(optional)* callback function to be executed upon
+ * @example
+ * // sets Led to white
+ * existingToken.ledOn([255, 255, 255]);
+ *
+ * // sets Led to white (See driver implementation for what colors are supported)
+ * existingToken.ledOn("white");
+ */
+AnyBoard.BaseToken.prototype.vibrate = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('vibrate')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.vibrate(this, value, win, fail);
+    }
+};
+
+AnyBoard.BaseToken.prototype.count = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.count(this, value, win, fail);
+    }
+};
+
+AnyBoard.BaseToken.prototype.displayX = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayX(this, value, win, fail);
+    }
+};
+
+AnyBoard.BaseToken.prototype.displayDigit = function(value, win, fail) {
+    if(!this.driver.hasOwnProperty('displayDigit')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn',this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayDigit(this, value, win, fail);
+    }
+}
 
 /**
  * tells token to blink its led
