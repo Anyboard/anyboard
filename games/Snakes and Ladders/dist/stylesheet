@@ -1,0 +1,7 @@
+body {
+	padding: 0;
+}
+.grid {
+	border: 1px solid #ccc;
+	border-width: 1px 0 0 1px;
+}

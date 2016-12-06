@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no
+		initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<title>Snakes and Ladders</title>
+	<!-- -->
+	<style>@import 'ui/css/evothings-app.css';
+		* {
+			box-sizing: border-box;
+		}
+		[class*="row-"]::after {
+   		 	content: "";
+	     	clear: both;
+   		 	display: block;
+		}
+		[class*="col-"] {
+			float: left;
+			padding:15px;
+			width: 50px;
+			height: 50px;
+			border: 1px solid;
+		}
+		#wrapper {
+			background: url('ui/images/snakesladders.jpg');
+			background-size: 300px;
+			background-repeat: no-repeat;				
+		}
+		p.topic {
+			font-weight: bold;
+		}
+	</style> 
+    <!-- cordova.js based -->
+	<script src="cordova.js"></script>
+    <!-- AnyboardJS libraries -->
+	<script src="dist/anyboard.js"></script> 
+    <!-- Bluetooth driver and dependencies-->
+    <script src="libs/evothings/evothings.js"></script>
+    <script src="libs/evothings/easyble/easyble.js"></script>
+    <script src="drivers/discovery.evothings.bluetooth.js"></script>
+	<script src="drivers/bean.evothings.bluetooth.js"></script>
+    <script src="drivers/rfduino.evothings.bluetooth.js"></script>
+	<!-- We've used jquery for quick development -->
+    <script src="libs/jquery-1.11.3.min.js"></script>	
+		<script>
+			 $(document).ready(function(){
+				//Will tell Anyboard to log everything
+				AnyBoard.Logger.threshold = 0;
+				$("#weHaveConnectedToPawn").hide();
+			});			
+		</script>
+		<script src="dist/anyboardHandler.js"></script>	
+		<script type="text/javascript">
+			//tokenlistener
+				AnyBoard.TokenManager.onTokenEvent("TAP", handleTokenTap);
+				AnyBoard.TokenManager.onTokenEvent("DOUBLE_TAP", handleTokenDoubleTap);
+				AnyBoard.TokenManager.onTokenEvent("SHAKE", handleTokenShake);
+				AnyBoard.TokenManager.onTokenEvent("TILT", handleTokenTilt);
+				Anyboard.TokenManager.onTokenConstraintEvent("MOVE_TO", handleTokenMove)
+		
+		</script>
+		<script src="dist/gameengine.js"></script>
+		
+	
+	</head>
+	<body>
+	<h1>Snakes and Ladders</h1>
+	<br>
+	
+	<div id="summary">
+	Hello! Discover tokens and Start the game!
+	<button onclick="discoverTokens()">Discover Tokens</button>
+    <div id="availableTokens"></div>
+    </div>
+    <div id="weHaveConnectedToPawn">We have connected to Anypawn!
+	<button onclick="startGame()">New Game</button>
+    <div id="msg"></div>
+    </div>
+    
+    </br>
+    
+    <div id="map">
+    </div>
+    
+    <div id="test"></div>
+	</body>	
+</html>
