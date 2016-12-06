@@ -1,3 +1,10 @@
+/**************************************************************************
+# 	NAME: rfduino.evothings.bluetooth.js
+# 	AUTHOR: Tomas Fagerbekk
+#	CONTRIBUTOR: Matthias Monnier
+#
+**************************************************************************/
+
 "use strict";
 
 /*
@@ -86,6 +93,7 @@
     /* Internal mapping from commands to uint8 representations */
     rfduinoBluetooth._CMD_CODE = {
         MOVE: 194,
+		TTEVENT: 195,
         GET_NAME: 32,
         GET_VERSION: 33,
         GET_UUID: 34,
@@ -101,7 +109,15 @@
         HAS_RFID: 71,
         HAS_NFC: 72,
         HAS_ACCELEROMETER: 73,
-        HAS_TEMPERATURE: 74
+        HAS_TEMPERATURE: 74,
+		VIBRATE: 200,
+		TAP: 201,
+		DOUBLE_TAP: 202,
+		SHAKE: 203,
+		TILT: 204,
+		COUNT: 205,
+		DISPLAY_X: 206,
+        DISPLAY_DIGIT:207
     };
 
     /* Internal mapping between color strings to Uint8 array of RGB colors */
@@ -196,7 +212,23 @@
             "HAS_TEMPERATURE",
             rfduinoBluetooth._CMD_CODE.HAS_TEMPERATURE,
             NO_PARAMS,
-            USE_CACHE)
+            USE_CACHE),
+		VIBRATE: rfduinoBluetooth._GenericSend(
+            "VIBRATE",
+            rfduinoBluetooth._CMD_CODE.VIBRATE,
+            HAS_PARAMS),
+		COUNT: rfduinoBluetooth._GenericSend(
+            "COUNT",
+            rfduinoBluetooth._CMD_CODE.COUNT,
+            HAS_PARAMS),
+		DISPLAY_X: rfduinoBluetooth._GenericSend(
+            "DISPLAY_X",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_X,
+            HAS_PARAMS),
+        DISPLAY_DIGIT: rfduinoBluetooth._GenericSend(
+            "DISPLAY_DIGIT",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_DIGIT,
+            HAS_PARAMS)
     };
 
     /**
@@ -272,19 +304,22 @@
                 case rfduinoBluetooth._CMD_CODE.MOVE:
                     var currentTile = uint8array[1];
                     var previousTile = uint8array[2];
-                    token.trigger('MOVE', {"value": currentTile, "newTile": currentTile, "oldTile": previousTile});
+                    token.trigger('MOVE', {"value": currentTile, "newTile": currentTile, "oldTile": previousTile}); //this is the one in use
                     token.trigger('MOVE_TO', {'meta-eventType': 'token-constraint' ,"constraint": currentTile});
                     token.trigger('MOVE_FROM', {'meta-eventType': 'token-constraint' ,"constraint": previousTile});
 
-                    for (var key in AnyBoard.TokenManager.tokens) {
+                    /*for (var key in AnyBoard.TokenManager.tokens) {
                         if (AnyBoard.TokenManager.tokens.hasOwnProperty(key)) {
                             var t = AnyBoard.TokenManager.tokens[key];
                             if (t.currentTile && t.currentTile === currentTile) {
                                 t.trigger('MOVE_NEXT_TO', {'meta-eventType': 'token-token' ,"token": t})
                             }
                         }
-                    }
+                    }*/
                     token.currentTile = currentTile;
+                    break;
+				case rfduinoBluetooth._CMD_CODE.TTEVENT:
+					token.trigger('TTEVENT', {'meta-eventType': 'token-token',"token": this});
                     break;
                 case rfduinoBluetooth._CMD_CODE.GET_NAME:
                     for (var i = 1; i < uint8array.length; i++)
@@ -336,6 +371,30 @@
                     break;
                 case rfduinoBluetooth._CMD_CODE.HAS_TEMPERATURE:
                     token.trigger('HAS_TEMPERATURE', {"value": uint8array[1]})
+                    break;
+				case rfduinoBluetooth._CMD_CODE.VIBRATE:
+                    token.trigger('VIBRATE')
+                    break;
+				case rfduinoBluetooth._CMD_CODE.COUNT:
+                    token.trigger('COUNT')
+                    break;
+				case rfduinoBluetooth._CMD_CODE.DISPLAY_X:
+                    token.trigger('DISPLAY_X')
+                    break;
+				case rfduinoBluetooth._CMD_CODE.TILT:
+                    token.trigger('TILT', {'meta-eventType': 'token'});
+                    break;
+				case rfduinoBluetooth._CMD_CODE.TAP:
+                    token.trigger('TAP', {'meta-eventType': 'token'});
+                    break;
+				case rfduinoBluetooth._CMD_CODE.DOUBLE_TAP:
+                    token.trigger('DOUBLE_TAP', {'meta-eventType': 'token'});
+                    break;
+				case rfduinoBluetooth._CMD_CODE.SHAKE:
+                    token.trigger('SHAKE', {'meta-eventType': 'token'});
+                    break;
+                case rfduinoBluetooth._CMD_CODE.DISPLAY_DIGIT:
+                    token.trigger('DISPLAY_DIGIT', {"value": uint8array[1]});
                     break;
                 default:
                     token.trigger('INVALID_DATA_RECEIVE', {"value": uint8array});
@@ -411,6 +470,21 @@
         }
     };
 
+    rfduinoBluetooth.vibrate = function (token, value, win, fail) {
+        this._COMMANDS.VIBRATE(token, new Uint8Array(value), win, fail);
+    };
+
+	rfduinoBluetooth.count = function (token, value, win, fail) {
+        this._COMMANDS.COUNT(token, new Uint8Array(value), win, fail);
+    };
+
+	rfduinoBluetooth.displayX = function (token, value, win, fail) {
+        this._COMMANDS.DISPLAY_X(token, new Uint8Array(value), win, fail);
+    };
+    rfduinoBluetooth.displayDigit = function (token, value, win, fail) {
+        this._COMMANDS.DISPLAY_DIGIT(token, new Uint8Array(value), win, fail);
+    };
+
     rfduinoBluetooth.ledBlink = function (token, value, win, fail) {
         value = value || 'white';
 
@@ -427,9 +501,9 @@
         this._COMMANDS.LED_OFF(token, win, fail);
     };
 
-    rfduinoBluetooth.onColorChange = function(token, changeCallback) {
+    /*rfduinoBluetooth.onColorChange = function(token, changeCallback) {
         token.on('colorChange', changeCallback);
-    };
+    };*/
 
     /**
      * Internal method. Raw sending of data to bean. Does not employ throttling/queueing, nor validates send data.
