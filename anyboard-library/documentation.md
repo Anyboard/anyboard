@@ -127,6 +127,8 @@ Global variable AnyBoard.
       * [.vibrate([value],[win],[fail])](#AnyBoard.BaseToken+vibrate)
       * [.count([value],[win],[fail])](#AnyBoard.BaseToken+count)
       * [.displayX([value],[win],[fail])](#AnyBoard.BaseToken+displayX)
+      * [.displayUp([value],[win],[fail])](#AnyBoard.BaseToken+displayUp)
+      * [.displayDown([value],[win],[fail])](#AnyBoard.BaseToken+displayDown)
       * [.displayDigit([value],[win],[fail])](#AnyBoard.BaseToken+displayDigit)
       * [.toString()](#AnyBoard.BaseToken+toString) ⇒ <code>string</code>
     * _static_
@@ -914,6 +916,8 @@ myTreasure.similarities(otherTresure);
     * [.vibrate([value],[win],[fail])](#AnyBoard.BaseToken+vibrate)
     * [.count([value],[win],[fail])](#AnyBoard.BaseToken+count)
     * [.displayX([value],[win],[fail])](#AnyBoard.BaseToken+displayX)
+    * [.displayUp([value],[win],[fail])](#AnyBoard.BaseToken+displayUp)
+    * [.displayDown([value],[win],[fail])](#AnyBoard.BaseToken+displayDown)
     * [.displayDigit([value],[win],[fail])](#AnyBoard.BaseToken+displayDigit)
     * [.toString()](#AnyBoard.BaseToken+toString) ⇒ <code>string</code>
   * _static_
@@ -1334,6 +1338,44 @@ Tells token to display a digit
 ```js
 // pawn display digit 1
 existingToken.displayDigit([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayUp"></a>
+#### baseToken.displayUp([value],[win],[fail])
+Tells token to display an arrow up 
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display an arrow up
+existingToken.displayUp([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayDown"></a>
+#### baseToken.displayDown([value],[win],[fail])
+Tells token to display an arrow down 
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display an arrow down
+existingToken.displayDown([1],win,fail);
 
 ```
 
