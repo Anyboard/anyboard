@@ -1,6 +1,11 @@
 // variable with tokens
 var app = {
-	devices: {}
+	devices: {},
+    tiles : {
+        1: "White",
+        2: "White"
+    },
+    token:{}
 }
 
 
@@ -33,6 +38,9 @@ function addToken(token) {
 		});
     }
 }
+
+
+
 function connect(tokenName) {
     var token = app.devices[tokenName];
 
@@ -50,11 +58,14 @@ function connect(tokenName) {
     // Signal that we're attempting to connect
     document.getElementById(tokenName).className = 'blue';
 
+
     // Send connect command.
     token.connect(weHaveConnectedToPawn());
+
 }
 function weHaveConnectedToPawn() {
 	$("#weHaveConnectedToPawn").show();
+
 	//$("#summary").hide();
 }
 
@@ -64,7 +75,7 @@ function sendDisplayDigitCmd(token,digit) {
     var completedFunction = function(data){
             //logging
             hyper.log("We HAPPY send the displayDigit command");
-            hyper.log(data);
+           
         };
         var errorCallback = function(errorMsg) {
             //logging
@@ -81,7 +92,7 @@ function sendDisplayXCmd(token) {
         // Function to be executed when LED is successfully turned on
         var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_X command");
-            hyper.log(data)
+           
         };
 
         // Function to be executed upon failure of LED
@@ -91,7 +102,7 @@ function sendDisplayXCmd(token) {
         };
 
         // Turns on token led.
-        token.displayX([1], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+        token.displayX([1], // 
             completedFunction,  // function to be executed when token signals
             errorCallback  // function to be executed in case of failure to send command to token
         );
@@ -99,7 +110,7 @@ function sendDisplayXCmd(token) {
 function sendVibrationCmd(token) {
      var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_X command");
-            hyper.log(data)
+            
         };
 
         // Function to be executed upon failure of LED
@@ -108,7 +119,58 @@ function sendVibrationCmd(token) {
             hyper.log(errorMsg);
         };
                 // Turns on token led.
-        token.vibrate([100], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+        token.vibrate([100], // 
+            completedFunction,  // function to be executed when token signals
+            errorCallback  // function to be executed in case of failure to send command to token
+        );
+}
+function sendDisplayW(token) {
+     var completedFunction = function(data){
+            hyper.log("We happily send the DISPLAY_W command");
+            hyper.log(data)
+        };
+
+        // Function to be executed upon failure of LED
+        var errorCallback = function(errorMsg) {
+            hyper.log("Failed to send the DISPLAY_W command");
+            hyper.log(errorMsg);
+        };
+                // Turns on token led.
+        token.displayW([1], // 
+            completedFunction,  // function to be executed when token signals
+            errorCallback  // function to be executed in case of failure to send command to token
+        );
+}
+function sendDisplayUp(token) {
+     var completedFunction = function(data){
+            hyper.log("We happily send the DISPLAY_UP command");
+            
+        };
+
+        // Function to be executed upon failure of LED
+        var errorCallback = function(errorMsg) {
+            hyper.log("Failed to send the DISPLAY_UP command");
+            hyper.log(errorMsg);
+        };
+                // Turns on token led.
+        token.displayUp([1], // 
+            completedFunction,  // function to be executed when token signals
+            errorCallback  // function to be executed in case of failure to send command to token
+        );
+}
+function sendDisplayDown(token) {
+     var completedFunction = function(data){
+            hyper.log("We happily send the DISPLAY_DOWN command");
+           
+        };
+
+        // Function to be executed upon failure of LED
+        var errorCallback = function(errorMsg) {
+            hyper.log("Failed to send the DISPLAY_DOWN command");
+            hyper.log(errorMsg);
+        };
+                // Turns on token led.
+        token.displayDown([1], //
             completedFunction,  // function to be executed when token signals
             errorCallback  // function to be executed in case of failure to send command to token
         );
@@ -118,7 +180,9 @@ function handleTokenTap(token) {
    
     var diceroll = this.rollDice();
     this.sendDisplayDigitCmd(token,diceroll);
-    setTimeout(function(){ // endre senere til fargesensoren, endring i farge sender displayX
+    app.token[token] = diceroll;
+   
+    setTimeout(function(){ // 
         sendDisplayXCmd(token);
     },5000);
     move(diceroll,token);
@@ -132,9 +196,14 @@ function handleTokenShake(token) {
 function handleTokenTilt(token) {
   //  alert("This is a tilt");
 }
-function handleTokenMove(token, constraint, options) {
-    alert("Move detected");
+function handleTokenMove(token, constraint, options) { //Needs an update with color recogniztion to be used
     AnyBoard.Logger.log("Moved to tilee " + constraint);
+   
+    if(app.token[token] >= -1) {
+        app.token[token] = -1;
+        //move_detected(token,constraint, app.token[token]);   
+    }
 }
+
 
 

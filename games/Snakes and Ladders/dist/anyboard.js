@@ -607,6 +607,7 @@ AnyBoard.Player = function(name, options) {
     this.class = options.class;
     this.bank = new AnyBoard.ResourceSet();
     this.properties = options;
+    this.tile = options.tile;
 
     if (AnyBoard.Player.all[this.name])
         AnyBoard.Logger.warn("Player with name " + this.name + " already exists. Old player will no longer be available " +
@@ -1436,7 +1437,7 @@ AnyBoard.BaseToken.prototype.disconnect = function() {
  */
 AnyBoard.BaseToken.prototype.trigger = function(eventName, eventOptions) {
     AnyBoard.Logger.debug('Triggered "' + eventName + '"', this);
-
+   
     var baseTrigger = function(dict, event, args) {
         if (dict[event])
             for (var i in dict[event]) {
@@ -1821,6 +1822,30 @@ AnyBoard.BaseToken.prototype.displayX = function(value, win, fail) {
         fail && fail('This token has not implemented ledOn');
     } else {
         this.driver.displayX(this, value, win, fail);
+    }
+};
+AnyBoard.BaseToken.prototype.displayW = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayW(this, value, win, fail);
+    }
+};
+AnyBoard.BaseToken.prototype.displayUp = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayUp(this, value, win, fail);
+    }
+};
+AnyBoard.BaseToken.prototype.displayDown = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayDown(this, value, win, fail);
     }
 };
 

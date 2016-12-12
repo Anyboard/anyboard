@@ -117,7 +117,10 @@
 		TILT: 204,
 		COUNT: 205,
 		DISPLAY_X: 206,
-        DISPLAY_DIGIT:207
+        DISPLAY_DIGIT:207,
+        DISPLAY_W: 208,
+        DISPLAY_UP: 209,
+        DISPLAY_DOWN: 210
     };
 
     /* Internal mapping between color strings to Uint8 array of RGB colors */
@@ -228,6 +231,18 @@
         DISPLAY_DIGIT: rfduinoBluetooth._GenericSend(
             "DISPLAY_DIGIT",
             rfduinoBluetooth._CMD_CODE.DISPLAY_DIGIT,
+            HAS_PARAMS),
+        DISPLAY_W: rfduinoBluetooth._GenericSend(
+            "DISPLAY_W",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_W,
+            HAS_PARAMS),
+        DISPLAY_UP: rfduinoBluetooth._GenericSend(
+            "DISPLAY_UP",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_UP,
+            HAS_PARAMS),
+        DISPLAY_DOWN: rfduinoBluetooth._GenericSend(
+            "DISPLAY_DOWN",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_DOWN,
             HAS_PARAMS)
     };
 
@@ -294,7 +309,6 @@
         var handleReceiveUpdateFromToken = function(uint8array) {
             var command = uint8array[0];
             var strData = "";
-
             switch (command) {
                 case rfduinoBluetooth._CMD_CODE.GET_BATTERY_STATUS:
                     for (var i = 1; i < uint8array.length; i++)
@@ -380,6 +394,15 @@
                     break;
 				case rfduinoBluetooth._CMD_CODE.DISPLAY_X:
                     token.trigger('DISPLAY_X')
+                    break;
+                case rfduinoBluetooth._CMD_CODE.DISPLAY_W:
+                    token.trigger('DISPLAY_W')
+                    break;
+                case rfduinoBluetooth._CMD_CODE.DISPLAY_UP:
+                    token.trigger('DISPLAY_UP')
+                    break;
+                case rfduinoBluetooth._CMD_CODE.DISPLAY_DOWN:
+                    token.trigger('DISPLAY_DOWN')
                     break;
 				case rfduinoBluetooth._CMD_CODE.TILT:
                     token.trigger('TILT', {'meta-eventType': 'token'});
@@ -480,6 +503,15 @@
 
 	rfduinoBluetooth.displayX = function (token, value, win, fail) {
         this._COMMANDS.DISPLAY_X(token, new Uint8Array(value), win, fail);
+    };
+    rfduinoBluetooth.displayW = function (token, value, win, fail) {
+        this._COMMANDS.DISPLAY_W(token, new Uint8Array(value), win, fail);
+    };
+    rfduinoBluetooth.displayUp = function (token, value, win, fail) {
+        this._COMMANDS.DISPLAY_UP(token, new Uint8Array(value), win, fail);
+    };
+    rfduinoBluetooth.displayDown = function (token, value, win, fail) {
+        this._COMMANDS.DISPLAY_DOWN(token, new Uint8Array(value), win, fail);
     };
     rfduinoBluetooth.displayDigit = function (token, value, win, fail) {
         this._COMMANDS.DISPLAY_DIGIT(token, new Uint8Array(value), win, fail);

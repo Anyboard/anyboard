@@ -86,6 +86,42 @@ void TokenFeedback::displayX()
 	matrix.clear();
 	matrix.writeDisplay();
 }
+/**************************************************************************
+# Display a W on the screen
+**************************************************************************/
+void TokenFeedback::displayW()
+{
+  matrix.clear();
+  matrix.drawBitmap(0, 0, W_bmp, 8, 8, LED_ON);
+  matrix.writeDisplay();
+  delay(5000);
+  matrix.clear();
+  matrix.writeDisplay();
+}
+/**************************************************************************
+# Display a arrow up on the screen
+**************************************************************************/
+void TokenFeedback::displayUp()
+{
+  matrix.clear();
+  matrix.drawBitmap(0, 0, UP_bmp, 8, 8, LED_ON);
+  matrix.writeDisplay();
+  delay(3000);
+  matrix.clear();
+  matrix.writeDisplay();
+}
+/**************************************************************************
+# Display a down arrow on the screen
+**************************************************************************/
+void TokenFeedback::displayDown()
+{
+  matrix.clear();
+  matrix.drawBitmap(0, 0, DOWN_bmp, 8, 8, LED_ON);
+  matrix.writeDisplay();
+  delay(3000);
+  matrix.clear();
+  matrix.writeDisplay();
+}
 
 /**************************************************************************
 #	Display the argument digit on the screen

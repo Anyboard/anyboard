@@ -1823,6 +1823,14 @@ AnyBoard.BaseToken.prototype.displayX = function(value, win, fail) {
         this.driver.displayX(this, value, win, fail);
     }
 };
+AnyBoard.BaseToken.prototype.displayW = function(value, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
+        fail && fail('This token has not implemented ledOn');
+    } else {
+        this.driver.displayW(this, value, win, fail);
+    }
+};
 
 AnyBoard.BaseToken.prototype.displayDigit = function(value, win, fail) {
     if(!this.driver.hasOwnProperty('displayDigit')) {
