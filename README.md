@@ -1,5 +1,4 @@
-# Anyboard 
-#### A platform for making and play hybrid Board Game Platform
+# Anyboard: A platform for making and play hybrid Board Game Platform
 
 ![Platform photo](imgs/anyboard.jpg)
 
@@ -64,7 +63,7 @@ Anyboard currently prototypes two different types of interactive tokens: aPawn, 
 
 ### Cardboard templates
 
-![cardboard_template](cardboard_template.jpg)
+![cardboard_template](imgs/cardboard_template.jpg)
 
 The cardboard template provides support to create custom cardboards that interact with aPawn tokens. aPawns use color temperature sensing to implement constraint regions. We therefore selected nine colors that provided satisfactory sensor recognition rate across different materials and printing techniques and associate them with unique IDs to be used in game development. A color palette to draw cardboard with custom constraint regions is provided as a template file that can be modified with vector graphic editors.
 
@@ -82,6 +81,8 @@ Although tokens are the primary user interface with a game, it is possible to co
 A subset of the TokenManager interface functions is provided in Figure. For more information see [AnyboardJS page]
 
 # How to make an Anyboard Game
+
+TBD
 
 # Example games
 
