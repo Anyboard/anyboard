@@ -38,9 +38,9 @@ Anyboard Design entities constitute the foundation of a language to model intera
 - *Tokens* are technology-augmented artifacts which resemble traditional game pieces; ranging from elements of chance (e.g. an augmented dice in *Backgammon* or RFID-enabled cards in *Monopoly*) to game pieces, e.g. pawns augmented with an LCD displaying the player’s rank in the game.
 - *Constraints* are either visual or physical confining regions in the board space. The association or dissociation of a token within a constraint can be mapped to digital operations to activate game dynamics. Examples of constraints are checks for Chess pieces and territories in Risk.
 - *Interaction events* are player-triggered manipulations of tokens, that mod- ify the (digital and physical) state of a game. We define three types of events:
-  – *Token Event (TE)*: the manipulation of a single token on, over around the board; e.g. the action of rolling a dice or drawing a card
-  – *Token-Constraint Event (TCE)*: the operation of building transient token- constraint associations by adding or removing tokens to a constrained region of the board; e.g. moving army pieces beyond a territory line as an attack action
-  – *Token-Token Event (TTE)*: the operation of building transient token-token adjacency relationships, achieved by moving tokens on the board; e.g. moving a token next to another token to exchange a resource between two players.
+  * *Token Event (TE)*: the manipulation of a single token on, over around the board; e.g. the action of rolling a dice or drawing a card
+  * *Token-Constraint Event (TCE)*: the operation of building transient token- constraint associations by adding or removing tokens to a constrained region of the board; e.g. moving army pieces beyond a territory line as an attack action
+  * *Token-Token Event (TTE)*: the operation of building transient token-token adjacency relationships, achieved by moving tokens on the board; e.g. moving a token next to another token to exchange a resource between two players.
 
 An Anyboard game can be therefore defined as a sequence of player-initiated interaction events that modify spatial configurations of tokens with respect to board constraints and other tokens. As a consequence tokens’ intangible (digital feedbacks) representations are updated.
 Sequences of interaction events describe players’ actions during the game and are mapped to specific game dynamics implemented in a game engine.
