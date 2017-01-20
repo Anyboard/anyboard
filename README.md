@@ -80,7 +80,7 @@ Although tokens are the primary user interface with a game, it is possible to co
 
 A subset of the TokenManager interface functions is provided in Figure. For more information see [AnyboardJS page]
 
-!(AnyboardJS)[anyboardjs.png]
+![AnyboardJS](anyboardjs.png)
 
 # How to make an Anyboard Game
 
