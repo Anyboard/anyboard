@@ -23,6 +23,9 @@ class TokenFeedback {
 		void vibrateLong();
 		void displayCount();
 		void displayX();
+    void displayW();
+    void displayUp();
+    void displayDown();
 		void displayDigit(int digit);
 		void matrixConfig();
 		
@@ -150,5 +153,34 @@ static const uint8_t PROGMEM
     B00011000,
     B00100100,
     B01000010,
-    B10000001 };
+    B10000001 },
+    W_bmp[] =
+  { B10000001,
+    B10000001,
+    B10000001,
+    B10011001,
+    B01011010,
+    B01011010,
+    B01100110,
+    B01000010
+    },
+    UP_bmp[] =
+  { B00011000,
+    B00111100,
+    B01011010,
+    B10011011,
+    B00011000,
+    B00011000,
+    B00011000,
+    B00011000 },
+    DOWN_bmp[] =
+  { B00011000,
+    B00011000,
+    B00011000,
+    B00011000,
+    B10011001,
+    B01011010,
+    B00111100,
+    B00011000 
+    };
 #endif
