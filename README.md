@@ -7,6 +7,8 @@ Making hybrid board games that mix the interactivity of video games with the soc
 For furter references and details please read:
 S. Mora, T. Fagerbekk, M. Monnier, E. Schroeder and M. Divitini. “Anyboard: a Platform for Hybrid Board Games”. In proceedings of the International Conference on Entertainment Computing (ICEC), 2016. [preprint](https://dl.dropboxusercontent.com/u/4495822/Papers/Papers/Anyboard_ICEC_preprint.pdf)
 
-RapIoT is released under [Apache 2.0 license](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)).
+Anyboard is released under [Apache 2.0 license](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)).
 
 # Anyboard fundamentals
+
+![Platform photo](imgs/anyboard.jpg)
