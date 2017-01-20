@@ -25,7 +25,7 @@ The platform supports the development of interactive board games with design and
   1. *Interactive game tokens and cardboard templates* to support the construction of the game hardware. The tokens are generic enough to be reused across different games
   2. *AnyboardJS* A software library to facilitate the coding of games by abstracting the complexity of dealing with hardware and lowlevel programming. The library is designed to be packaged as smartphone app. Rather than being a primary means of interaction, in our platform the smartphone runs the game engine and provide an administration interface. 
   
- ## Design entities
+## Design entities
   
 Anyboard Design entities constitute the foundation of a language to model interaction styles with hybrid board games. They are derived from the [ITo approach](http://link.springer.com/chapter/10.1007/978-3-319-26005-1_10) and are mapped to traditional board game elements.
 
@@ -45,5 +45,21 @@ Anyboard Design entities constitute the foundation of a language to model intera
 An Anyboard game can be therefore defined as a sequence of player-initiated interaction events that modify spatial configurations of tokens with respect to board constraints and other tokens. As a consequence tokens’ intangible (digital feedbacks) representations are updated.
 Sequences of interaction events describe players’ actions during the game and are mapped to specific game dynamics implemented in a game engine.
 The game engine connects and exchange data with tokens using the AnyboardJS library running on the user’s smartphone, for example activating specific game mechanics according with interaction events sensed by tokens or triggering digital feedbacks.
+
+## Intearactive game tokens and cardboard template
+
+Anyboard currently prototypes two different types of interactive tokens: aPawn, an augmented game piece, and aDeck, an augmented card deck. Being two of the most common elements of board game they can be used to implement a wide range of games.
+
+### aPawun
+
+![aPawn](imgs/tokens.png)
+
+*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. See [aPawn page]().
+
+### aDeck
+
+![aDeck](imgs/printer.jpg)
+
+*aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. See [aDeck page]()
 
 
