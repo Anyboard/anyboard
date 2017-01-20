@@ -1,16 +1,12 @@
-# Example: led-on
+# Anyboard Demo App
 
-Connects to bluetooth devices and sends a command to vibrate the pawn.
+Demonstrates the basic functioning of the Anyboard Pawn and Printer
 
 ## Setup
 
-### Acquire hardware
+### Required hardware
 
-This demo is supported by any chip with firmware that has implemented the AnyBoard bluetooth protocol.
-Firmware and drivers for [rfduino](http://www.rfduino.com/) and [LightBlue Bean](http://legacy.punchthrough.com/bean/) is available in [drivers](./drivers) and [firmware](./firmware) respectively.
-
-### Upload firmware
-- Upload the applicable firmware to the arduino chip.
+- Anybaord Pawn
 
 ### Download and install Evothings
 - Install [Evothings](https://evothings.com/download/) on your PC/Mac
