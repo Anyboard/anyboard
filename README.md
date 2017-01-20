@@ -1,6 +1,6 @@
 # Anyboard: A platform for making and play hybrid Board Game Platform
 
-![Platform photo](imgs/anyboard.jpg)
+![Platform photo](imgs/anyboard2.jpg)
 
 Making hybrid board games that mix the interactivity of video games with the social impact of board games is challenging. While the design process needs to take into account elements from the digital and analog domains, building prototypes requires dealing with diverse technologies in the field of Tangible Interfaces and Interactive Tabletop and Surfaces. 
 
