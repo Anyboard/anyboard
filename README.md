@@ -71,6 +71,8 @@ The cardboard template provides support to create custom cardboards that interac
 
 AnyboardJS library is a javascript library providing developer-friendly interface between the interactive tokens pand game-specific code developed with or without third-party game engines and running in a smartphone app. 
 
+![AnyboardJS](imgs/anyboardjs_lib.png)
+
 AnyboardJS provides two main functions. 
 
 1. It establishes wireless links with aPawn and aDeck enabling data exchange using specific drivers for each type of token. 
@@ -79,8 +81,6 @@ AnyboardJS provides two main functions.
 Although tokens are the primary user interface with a game, it is possible to code a secondary GUI to display extended informaion and controls on the smartphone screen; e.g. to be used to edit game settings, to display game rules and leader-boards. This functionality can be implemented with external libraries (e.g. jQuery mobile1).
 
 A subset of the TokenManager interface functions is provided in Figure. For more information see [AnyboardJS page]()
-
-![AnyboardJS](imgs/anyboardjs_lib.png)
 
 # How to make an Anyboard Game
 
