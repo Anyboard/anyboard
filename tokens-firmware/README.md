@@ -1,13 +1,18 @@
-# anyboardpawn
-This GitHub repository contains all the files that are required for the pawn token of AnyBoard project.
+# Anyboard Tokens
+This repository contains the firmware for the AnyBoard interactive game tokens.
+Two game tokens are currenty under development: pawn and cards printer.
 
 ## firmware
-The folder *firmware* contains the RFduino program of the pawn. This folder contains four libraries that have to be copied and pasted in the Arduino's *libraries* folder.
+The folder *pawn* and *printer* contains the RFduino program of the interactive tokens. The *libraries* folder contains four libraries that have to be copied and pasted in the Arduino's *libraries* folder.
 
 ## demo_application_evothings
-The folder *demo_application_evothings* contains all the files needed for the demo application. This application is made with evothings. In order to use this application, just follow this [tutorial](https://evothings.com/getting-started-with-evothings-studio-in-90-seconds/)
+See (../games/demo-app)[demo app] for a simple demonstrator of the capabilities of the tokens. In order to use this application, follow this [tutorial](https://evothings.com/getting-started-with-evothings-studio-in-90-seconds/)
 
-## hardware
+# Pawn Token
+
+
+![Schematic](imgs/tokens.png)
+
 * RFduino ([website](http://www.rfduino.com/), [GitHub](https://github.com/RFduino/RFduino))
 * Accelerometer ADXL345 ([datasheet](http://www.analog.com/media/en/technical-documentation/data-sheets/ADXL345.pdf))
 * Vibrating motor ([datasheet](https://www.sparkfun.com/datasheets/Robotics/310-101_datasheet.pdf))
@@ -15,7 +20,7 @@ The folder *demo_application_evothings* contains all the files needed for the de
 * Capacitive sensor MPR121 ([datasheet](https://www.sparkfun.com/datasheets/Components/MPR121.pdf))
 * LED display ([datasheet](https://www.sparkfun.com/datasheets/Components/MPR121.pdf), [Adafruit product](https://www.adafruit.com/products/870))
 
-![Schematic](https://github.com/Matth26/anyboardpawn/blob/master/schematic_fritzing.png)
+![Schematic](imgs/schematic_fritzing.png)
 
 ## libraries
 In order to use all the components listed in the hardware part, some Adafruit's and support libraries have been used. You can find these libraries in the *libraries* folder. Refer to the [manual installation section in the official Arduino library guide](https://www.arduino.cc/en/Guide/Libraries#toc5) to install the libraries on your system.
