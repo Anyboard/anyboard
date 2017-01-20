@@ -57,7 +57,7 @@ Anyboard currently prototypes two different types of interactive tokens: aPawn, 
 
 ### aDeck
 
-![aDeck](imgs/printer.jpg)
+![aDeck](imgs/printer2.jpg)
 
 *aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. More information on the [aDeck page]()
 
@@ -67,7 +67,7 @@ Anyboard currently prototypes two different types of interactive tokens: aPawn, 
 
 The cardboard template provides support to create custom cardboards that interact with aPawn tokens. aPawns use color temperature sensing to implement constraint regions. We therefore selected nine colors that provided satisfactory sensor recognition rate across different materials and printing techniques and associate them with unique IDs to be used in game development. A color palette to draw cardboard with custom constraint regions is provided as a template file that can be modified with vector graphic editors.
 
-## AnyboardJS
+## AnyboardJS library
 
 AnyboardJS library is a javascript library providing developer-friendly interface between the interactive tokens pand game-specific code developed with or without third-party game engines and running in a smartphone app. 
 
@@ -79,6 +79,8 @@ AnyboardJS provides two main functions.
 Although tokens are the primary user interface with a game, it is possible to code a secondary GUI to display extended informaion and controls on the smartphone screen; e.g. to be used to edit game settings, to display game rules and leader-boards. This functionality can be implemented with external libraries (e.g. jQuery mobile1).
 
 A subset of the TokenManager interface functions is provided in Figure. For more information see [AnyboardJS page]
+
+!(AnyboardJS)[anyboardjs.png]
 
 # How to make an Anyboard Game
 
