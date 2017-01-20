@@ -6,10 +6,12 @@ Two game tokens are currenty under development: pawn and cards printer.
 The folder *pawn* and *printer* contains the RFduino program of the interactive tokens. The *libraries* folder contains four libraries that have to be copied and pasted in the Arduino's *libraries* folder.
 
 ## demo_application_evothings
-See (../games/demo-app)[demo app] for a simple demonstrator of the capabilities of the tokens. In order to use this application, follow this [tutorial](https://evothings.com/getting-started-with-evothings-studio-in-90-seconds/)
+See [demo app](../games/demo-app) for a simple demonstrator of the capabilities of the tokens. In order to use this application, follow this [tutorial](https://evothings.com/getting-started-with-evothings-studio-in-90-seconds/)
+
+##License
+See the licencse.txt file for license rights and limitations (Apache V2.0).
 
 # Pawn Token
-
 
 ![Schematic](imgs/tokens.png)
 
@@ -43,8 +45,17 @@ For the LED display the Adafruit_GFX library is used ([Adafruit_GFX](https://git
 ### Adafruit_LED_backpack
 And the Adafruit_lED_backpack library is also required ([Adafruit_lED_backpack](https://github.com/adafruit/Adafruit-LED-Backpack-Library))
 
-## examples
-In the folder *examples* few arduino sketch example can be found. These programs are example programs using the accelerometer ADXL345. In order to run those example, the libraries contained in the folder */examples/libraries* have to be copied and pasted in the Arduino's *libraries* folder.
+# Printer Token
 
-##License
-See the licencse.txt file for license rights and limitations (Apache V2.0).
+![printer front](imgs/printer.jpg)
+
+#### Hardware
+* [Bean](http://legacy.punchthrough.com/bean/) *Temporaney, this will be replaced by RFDUINO*
+* Mini Thermal Printer - [specs](https://www.adafruit.com/products/597) - [tutorial](https://learn.adafruit.com/mini-thermal-receipt-printer)
+* Power adapter
+
+#### Software
+* Arduino IDE
+* Arduino JSON - [link](https://github.com/bblanchon/ArduinoJson)
+* Adafruit Thermal_Library - [link](https://github.com/adafruit/Adafruit-Thermal-Printer-Library)
+
