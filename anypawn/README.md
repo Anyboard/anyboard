@@ -3,10 +3,7 @@
 This repository contains firmware, electronic schematics and case construction files for AnyPawn
 
 ## Demo Application
-See [demo app](../games/demo-app) for a simple demonstrator of the capabilities of AnyPawn. In order to use this application, follow this [tutorial](https://evothings.com/getting-started-with-evothings-studio-in-90-seconds/)
-
-## License
-See the licencse.txt file for license rights and limitations (Apache V2.0).
+See [demo app](../games/demo-app) for a simple demonstrator of the capabilities of AnyPawn. 
 
 ## Case Construction
 
