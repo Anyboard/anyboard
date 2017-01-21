@@ -1,4 +1,4 @@
-# Anyboard: A platform for making and play hybrid Board Game Platform
+# Anyboard: A platform for making and play hybrid Board games
 
 ![Platform photo](imgs/anyboard2.jpg)
 
