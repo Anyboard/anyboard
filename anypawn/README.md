@@ -5,7 +5,7 @@ This repository contains firmware, electronic schematics and case construction f
 ![Photo](imgs/tokens.png)
 
 ## Demo Application
-See [demo app](../games/demo-anyPawn) for a simple demonstrator of the capabilities of AnyPawn.
+See [anyPawn demo app](../games/demo-anyPawn) for a simple demonstrator of the capabilities of AnyPawn.
 
 ## Fundamentals
 
