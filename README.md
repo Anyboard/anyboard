@@ -49,17 +49,17 @@ The game engine connects and exchange data with tokens using the AnyboardJS libr
 
 Anyboard currently prototypes two different types of interactive tokens: aPawn, an augmented game piece, and aDeck, an augmented card deck. Being two of the most common elements of board game they can be used to implement a wide range of games.
 
-### aPawn
+### anyPawn
 
 ![aPawn](imgs/tokens.png)
 
-*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information: [aPawn page](./anypawn).
+*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information: [anyPawn page](./anypawn).
 
-### aDeck
+### anyDeck
 
 ![aDeck](imgs/printer2.jpg)
 
-*aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. More information: [aDeck page](./anydeck)
+*aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. More information: [anyDeck page](./anydeck)
 
 ### Cardboard templates
 
@@ -80,7 +80,7 @@ AnyboardJS provides two main functions.
 
 Although tokens are the primary user interface with a game, it is possible to code a secondary GUI to display extended informaion and controls on the smartphone screen; e.g. to be used to edit game settings, to display game rules and leader-boards. This functionality can be implemented with external libraries (e.g. jQuery mobile1).
 
-A subset of the TokenManager interface functions is provided in Figure. More information: [AnyboardJS page](./anyboardjs)
+A subset of the TokenManager interface functions is provided in Figure. More information: [AnyboardJS page](./anyboardJS)
 
 # How to make an Anyboard Game
 
