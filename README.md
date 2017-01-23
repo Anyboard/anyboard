@@ -53,19 +53,19 @@ Anyboard currently prototypes two different types of interactive tokens: aPawn, 
 
 ![aPawn](imgs/tokens.png)
 
-*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information on the [aPawn page](./anypawn).
+*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information: [aPawn page](./anypawn).
 
 ### aDeck
 
 ![aDeck](imgs/printer2.jpg)
 
-*aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. More information on the [aDeck page]()
+*aDeck* is an interactive version of the card deck commonly found in board games. Instead of holding stacks of cards, aDeck prints out its own cards using a small thermal printer. More information: [aDeck page](./anydeck)
 
 ### Cardboard templates
 
 ![cardboard_template](imgs/cardboard_template.jpg)
 
-The cardboard template provides support to create custom cardboards that interact with aPawn tokens. aPawns use color temperature sensing to implement constraint regions. We therefore selected nine colors that provided satisfactory sensor recognition rate across different materials and printing techniques and associate them with unique IDs to be used in game development. A color palette to draw cardboard with custom constraint regions is provided as a template file that can be modified with vector graphic editors.
+The cardboard template provides support to create custom cardboards that interact with aPawn tokens. aPawns use color temperature sensing to implement constraint regions. We therefore selected nine colors that provided satisfactory sensor recognition rate across different materials and printing techniques and associate them with unique IDs to be used in game development. A color palette to draw cardboard with custom constraint regions is provided as a template file that can be modified with vector graphic editors. More information: [Cardboard templates](./cardboard-templates)
 
 ## AnyboardJS library
 
@@ -80,7 +80,7 @@ AnyboardJS provides two main functions.
 
 Although tokens are the primary user interface with a game, it is possible to code a secondary GUI to display extended informaion and controls on the smartphone screen; e.g. to be used to edit game settings, to display game rules and leader-boards. This functionality can be implemented with external libraries (e.g. jQuery mobile1).
 
-A subset of the TokenManager interface functions is provided in Figure. For more information see [AnyboardJS page]()
+A subset of the TokenManager interface functions is provided in Figure. More information: [AnyboardJS page](./anyboardjs)
 
 # How to make an Anyboard Game
 
@@ -88,6 +88,6 @@ TBD
 
 # Example games
 
-See [Games page]().
+See [Games page](./games).
 
 
