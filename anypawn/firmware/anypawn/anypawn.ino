@@ -45,7 +45,7 @@ uint8_t last_sector_ID = 0;
 uint8_t current_sector_ID = 0;
 
 // BOARD CONSTANTS
-#define ACC_INT1_PIN 4 // Pin where the acceleromter interrupt1 is connected
+#define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
 #define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
 // Initiation of the objects
@@ -122,7 +122,7 @@ void loop(void)
      {
        tokenConstraint.rgb_sensor.getData();
      }
-     
+
      Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
 
      // Location of the pawn in function of the color temperature (ct)

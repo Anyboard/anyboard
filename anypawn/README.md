@@ -11,7 +11,14 @@ See [demo app](../games/demo-app) for a simple demonstrator of the capabilities 
 
 AnyPawns are a technology-augmented version of game pieces commonly found in most games. They are capable of capturing the set of [interaction events and produce digital feedbacks](../readme.md#design entities). The following tables cluster interaction events and digital feedback supported by typology and provide a player-perspective description of their role. Possible mapping with dynamics commonly found in board games are also exemplified. For example the action of shaking an anyPawn can be mapped to the draw of a random number or event.
 
-Interaction events and digital feedbacks commands are exchanged between anyPawns and the smartphone running anyboardJS using a 2-byte [protocol](./firmware/anypawn/protocol.h). The first byte describes the type of event or digital feedback (command)
+Interaction events and digital feedbacks commands are exchanged between anyPawns and the smartphone running anyboardJS using a binary protocol using 1-3 byte. Mapping between events/feedbacks names and the binary codes is provided [here](./firmware/anypawn/protocol.h).
+
+- The first byte describes the type of event or digital feedback (command)
+- The second and third bytes add optional parameter
+
+- Token-solo events use one byte only (name of the event)
+- Token-constraint events use three bytes (name of the event, current sector ID, old sector ID)
+- Token-token events use two bytes (name of the event, ID of the nearby pawn, side of the pawn) *NOT IMPLEMENTED*
 
 ### Interaction events
 
