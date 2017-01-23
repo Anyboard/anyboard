@@ -53,7 +53,7 @@ Anyboard currently prototypes two different types of interactive tokens: aPawn, 
 
 ![aPawn](imgs/tokens.png)
 
-*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information on the [aPawn page]().
+*aPawns* are a technology-augmented version of pawn pieces commonly found in most games. They are capable of capturing the set of interaction events and produce digital feedbacks. More information on the [aPawn page](./anypawn).
 
 ### aDeck
 
