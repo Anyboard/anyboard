@@ -1,7 +1,8 @@
 # AnyboardJS
-*Authors: Thomas Fagerbakk, Simone Mora*
+*Authors: Thomas Fagerbekk, Simone Mora*
 
 A simple JS-framework for creating Anyboard games.
+AnyboardJS ground work and implementation details are reported in [Thomas' master thesis](https://brage.bibsys.no/xmlui/handle/11250/2380959).
 
 - [Library documentation](documentation.md)
 - [Examples](examples)
