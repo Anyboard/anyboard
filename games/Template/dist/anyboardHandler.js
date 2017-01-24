@@ -30,6 +30,13 @@ function addToken(token) {
 		
 		token.on('connect',function(){
 		    document.getElementById(token.address).className = 'green';
+            $("#functions").append('<button type="button" onclick="sendVibrationCmd('+ "'" + token.address + "'" +')" class="indicator3"> Vibrate </button><br />');
+            $("#functions").append('<button type="button" onclick="sendCountCmd('+ "'" + token.address + "'" +')" class="indicator3"> Count </button><br />');
+            $("#functions").append('<button type="button" onclick="sendDisplayXCmd('+ "'" + token.address + "'" +')"class="indicator3"> Display a cross </button><br />');
+            $("#functions").append('<button type="button" onclick="sendDisplayDigitCmd('+ "'" + token.address + "'" +')"class="indicator3"> Display digit 6 </button><br />');
+            $("#functions").append('<button type="button" onclick="sendDisplayW('+ "'" + token.address + "'" +')"class="indicator3"> Display a W </button><br />');
+            $("#functions").append('<button type="button" onclick="sendDisplayUp('+ "'" + token.address + "'" +')"class="indicator3"> Display an arrow up </button><br />');
+            $("#functions").append('<button type="button" onclick="sendDisplayDown('+ "'" + token.address + "'" +')"class="indicator3"> Display an arrow down </button><br />');
 		});
     }
 }
@@ -56,22 +63,26 @@ function connect(tokenName) {
     // Signal that we're attempting to connect
     document.getElementById(tokenName).className = 'blue';
 
-
+    app.token = token;
     // Send connect command.
     token.connect(weHaveConnectedToPawn());
 
 }
 function weHaveConnectedToPawn() {
 	$("#weHaveConnectedToPawn").show();
-
+    $("#availableTokens").hide(); // hide the available tokens after connecting to one. If multiple tokens are needed: remove this line. 
 	//$("#summary").hide();
+    $("#functions").show();
 }
 
 /* The sendDisplayDigitCmd function will trigger the token.displayDigit found in the driver rfduino.evothings.bluethooth.js
    file. This will display the digit on the pawn LED screen.
 */
 
-function sendDisplayDigitCmd(token,digit) {
+function sendDisplayDigitCmd(tokenName,digit) {
+    var token = app.devices[tokenName];
+    digit = 6; //template purpose only
+   
     var completedFunction = function(data){
             //logging
             hyper.log("We HAPPY send the displayDigit command");
@@ -91,7 +102,8 @@ function sendDisplayDigitCmd(token,digit) {
 /* The sendDisplayXCmd function will trigger the token.displayX found in the driver rfduino.evothings.bluethooth.js
    file. This will display an X on the pawn LED screen.
 */
-function sendDisplayXCmd(token) {
+function sendDisplayXCmd(tokenName) {
+var token = app.devices[tokenName];
 
         // Function to be executed when LED is successfully turned on
         var completedFunction = function(data){
@@ -116,7 +128,8 @@ function sendDisplayXCmd(token) {
    file. The value sent is the length of the vibration in ms.
 */
 
-function sendVibrationCmd(token) {
+function sendVibrationCmd(tokenName) {
+    var token = app.devices[tokenName];
      var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_X command");
             
@@ -137,7 +150,8 @@ function sendVibrationCmd(token) {
 /* The sendDisplayW function will trigger the token.displayW found in the driver rfduino.evothings.bluethooth.js
    file. This will display a W on the pawn LED screen.
 */
-function sendDisplayW(token) {
+function sendDisplayW(tokenName) {
+    var token = app.devices[tokenName];
      var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_W command");
             hyper.log(data)
@@ -158,7 +172,8 @@ function sendDisplayW(token) {
 /* The sendDisplayUp function will trigger the token.displayUp found in the driver rfduino.evothings.bluethooth.js
    file. This will display an arrow pointing up on the pawn LED screen.
 */
-function sendDisplayUp(token) {
+function sendDisplayUp(tokenName) {
+    var token = app.devices[tokenName];
      var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_UP command");
             
@@ -179,7 +194,8 @@ function sendDisplayUp(token) {
 /* The sendDisplayDown function will trigger the token.displayDown found in the driver rfduino.evothings.bluethooth.js
    file. This will display an arrow pointing down on the pawn LED screen.
 */
-function sendDisplayDown(token) {
+function sendDisplayDown(tokenName) {
+    var token = app.devices[tokenName];
      var completedFunction = function(data){
             hyper.log("We happily send the DISPLAY_DOWN command");
            
@@ -197,38 +213,68 @@ function sendDisplayDown(token) {
         );
 }
 
+function sendCountCmd(tokenName) {
+    var token = app.devices[tokenName];
+    // Function to be executed when LED is successfully turned on
+    var completedFunction = function(data){
+        hyper.log("We happily send the COUNT command");
+        hyper.log(data)
+    };
+
+    // Function to be executed upon failure of LED
+    var errorCallback = function(errorMsg) {
+        hyper.log("Failed to send the COUNT command");
+        hyper.log(errorMsg);
+    };
+
+    // Turns on token led.
+    token.count([1], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+        completedFunction,  // function to be executed when token signals
+        errorCallback  // function to be executed in case of failure to send command to token
+    );
+}
+/*THe following functions are mapped to AnyBoard.TokenManager-tokenlistener ...*/
 function handleTokenTap(token) {
    // alert("This is a single tap");
+   document.getElementById("msg").innerHTML = "This is a tap";
 }
 function handleTokenDoubleTap(token) {
    // alert("This is a double tap");
+   document.getElementById("msg").innerHTML = "This is a Double_tap";
 }
 function handleTokenShake(token) {
   //  alert("This is a shake");
+  document.getElementById("msg").innerHTML = "This is a SHAKE";
 }
 function handleTokenTilt(token) {
   //  alert("This is a tilt");
+  document.getElementById("msg").innerHTML = "This is a TILT";
 }
+
+/* AnyBoard.TokenManager.onTokenMove only detects if there have been an change from one color to another.
+   These settings are manually set in the firmware/driver
+*/
 function handleTokenMove(token, constraint, options) { //Needs an update with color recogniztion to be used efficiently
     AnyBoard.Logger.log("Moved to tilee " + constraint);
   //  alert("This is a move");
+  document.getElementById("msg").innerHTML = "This is a MOVE";
 }
 
 function singleTokenTap(token) {
-    // alert("Will only trigger once. TAP");
+     alert("Will only trigger once. TAP");
 }
 
 function singleTokenDoubleTap(token) {
-    // alert("Will only trigger once. DOUBLE_TAP");
+     alert("Will only trigger once. DOUBLE_TAP");
 }
 function singleTokenShake(token) {
-    // alert("Will only trigger once. SHAKE");
+     alert("Will only trigger once. SHAKE");
 }
 function singleTokenTilt(token) {
-    // alert("Will only trigger once. TILT");
+     alert("Will only trigger once. TILT");
 }
 function singleTokenMove(token,constraint,options) {
-    //alert("Will only trigger once. MOVE_TO");
+    alert("Will only trigger once. MOVE_TO");
 }
 
 

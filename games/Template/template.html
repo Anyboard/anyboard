@@ -30,6 +30,7 @@
 				//Will tell Anyboard to log everything
 				AnyBoard.Logger.threshold = 0;
 				$("#weHaveConnectedToPawn").hide();
+				$("#functions").hide();
 			});			
 		</script>
 		<script src="dist/anyboardHandler.js"></script>	
@@ -42,10 +43,10 @@
 				AnyBoard.TokenManager.onTokenConstraintEvent("MOVE_TO",handleTokenMove);
 			
 		    //tokenlistener for detecting a single TAP,DOUBLE_TAP,SHAKE,TILT and MOVE_TO(movement). Only detected/executed once.
-		    	AnyBoard.TokenManager.onceTokenEvent("TAP" singleTokenTap);
-		    	AnyBoard.TokenManager.onceTokenEvent("DOUBLE_TAP" singleTokenDoubleTap);
-		    	AnyBoard.TokenManager.onceTokenEvent("SHAKE" singleTokenShake);
-		    	AnyBoard.TokenManager.onceTokenEvent("TILT" singleTokenTilt);
+		    	AnyBoard.TokenManager.onceTokenEvent("TAP", singleTokenTap);
+		    	AnyBoard.TokenManager.onceTokenEvent("DOUBLE_TAP", singleTokenDoubleTap);
+		    	AnyBoard.TokenManager.onceTokenEvent("SHAKE", singleTokenShake);
+		    	AnyBoard.TokenManager.onceTokenEvent("TILT", singleTokenTilt);
 		    	AnyBoard.TokenManager.onceTokenConstraintEvent("MOVE_TO",singleTokenMove);
 		</script>
 		
@@ -60,12 +61,16 @@
 	<button onclick="discoverTokens()">Discover Tokens</button>
     <div id="availableTokens"></div>
     </div>
-    <div id="weHaveConnectedToPawn">We have connected to Anypawn!
-	
-    <div id="msg"></div>
+    <div id="weHaveConnectedToPawn">You have connected to Anypawn!
+	</br>
+	<b>Previously action Detect:</b> 
+	</br>
+    <div id="msg">Nothing</div>
     </div>
-    
-    </br>
+    <div id="functions">
+    	<h2>Functions on the Anypawn</h2> 
 
+    </div>
+    </br>
 	</body>	
 </html>
