@@ -124,6 +124,12 @@ Global variable AnyBoard.
       * [.ledOn(value, [win], [fail])](#AnyBoard.BaseToken+ledOn)
       * [.ledBlink(value, [win], [fail])](#AnyBoard.BaseToken+ledBlink)
       * [.ledOff([win], [fail])](#AnyBoard.BaseToken+ledOff)
+      * [.vibrate([value],[win],[fail])](#AnyBoard.BaseToken+vibrate)
+      * [.count([value],[win],[fail])](#AnyBoard.BaseToken+count)
+      * [.displayX([value],[win],[fail])](#AnyBoard.BaseToken+displayX)
+      * [.displayUp([value],[win],[fail])](#AnyBoard.BaseToken+displayUp)
+      * [.displayDown([value],[win],[fail])](#AnyBoard.BaseToken+displayDown)
+      * [.displayDigit([value],[win],[fail])](#AnyBoard.BaseToken+displayDigit)
       * [.toString()](#AnyBoard.BaseToken+toString) ⇒ <code>string</code>
     * _static_
       * [.setDefaultDriver(driver)](#AnyBoard.BaseToken.setDefaultDriver) ⇒ <code>boolean</code>
@@ -907,6 +913,12 @@ myTreasure.similarities(otherTresure);
     * [.ledOn(value, [win], [fail])](#AnyBoard.BaseToken+ledOn)
     * [.ledBlink(value, [win], [fail])](#AnyBoard.BaseToken+ledBlink)
     * [.ledOff([win], [fail])](#AnyBoard.BaseToken+ledOff)
+    * [.vibrate([value],[win],[fail])](#AnyBoard.BaseToken+vibrate)
+    * [.count([value],[win],[fail])](#AnyBoard.BaseToken+count)
+    * [.displayX([value],[win],[fail])](#AnyBoard.BaseToken+displayX)
+    * [.displayUp([value],[win],[fail])](#AnyBoard.BaseToken+displayUp)
+    * [.displayDown([value],[win],[fail])](#AnyBoard.BaseToken+displayDown)
+    * [.displayDigit([value],[win],[fail])](#AnyBoard.BaseToken+displayDigit)
     * [.toString()](#AnyBoard.BaseToken+toString) ⇒ <code>string</code>
   * _static_
     * [.setDefaultDriver(driver)](#AnyBoard.BaseToken.setDefaultDriver) ⇒ <code>boolean</code>
@@ -1252,6 +1264,120 @@ Turns LED off
 | --- | --- | --- |
 | [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
 | [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+<a name="AnyBoard.BaseToken+vibrate"></a>
+#### baseToken.vibrate([value],[win],[fail])
+Tells token to vibrate
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   The duration in  ms
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// 
+existingToken.vibrate([100],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+count"></a>
+#### baseToken.count([value],[win],[fail])
+Tells token to count down from 9-1
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code>
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn count down from 9-1
+existingToken.count([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayX"></a>
+#### baseToken.displayX([value],[win],[fail])
+Tells token to display a cross (X)
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display X
+existingToken.displayX([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayDigit"></a>
+#### baseToken.displayDigit([value],[win],[fail])
+Tells token to display a digit
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>| A digit between 0-9 to be displayed on the token
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display digit 1
+existingToken.displayDigit([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayUp"></a>
+#### baseToken.displayUp([value],[win],[fail])
+Tells token to display an arrow up 
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display an arrow up
+existingToken.displayUp([1],win,fail);
+
+```
+
+<a name="AnyBoard.BaseToken+displayDown"></a>
+#### baseToken.displayDown([value],[win],[fail])
+Tells token to display an arrow down 
+
+**Kind**: instance method of <code>[BaseToken](#AnyBoard.BaseToken)</code> 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] |  <code>string</code> &#124; <code>Array</code>|   
+| [win] | <code>[stdNoParamCallback](#stdNoParamCallback)</code> | *(optional)* callback function to be called upon successful execution |
+| [fail] | <code>[stdErrorCallback](#stdErrorCallback)</code> | *(optional)* callback function to be executed upon |
+
+**Example**  
+```js
+// pawn display an arrow down
+existingToken.displayDown([1],win,fail);
+
+```
 
 <a name="AnyBoard.BaseToken+toString"></a>
 #### baseToken.toString() ⇒ <code>string</code>
