@@ -17,34 +17,35 @@ Interaction events and digital feedbacks commands are exchanged between anyPawns
 - The second and third bytes add optional parameter
 
 - Token-solo events use one byte only (name of the event)
-- Token-constraint events use three bytes (name of the event, current sector ID, old sector ID)
+- Token-constraint events use three bytes (name of the event, sector ID [C_ID]
 - Token-token events use two bytes (name of the event, ID of the nearby pawn, side of the pawn) *NOT IMPLEMENTED*
+- Digital feedbacks use 1-20 bytes (name of the event, 1-19 bytes in payload)
 
-### Interaction events
+### Interaction events (Events sent from the anyPawn)
 
-| Type | Interaction Event | Description | Sample mapping with game mechanics |
-|------|-----------|-------------|------------------------------------|
-| TE | SHAKE | anyPawn is shaken | Throw a random number |
-| | TILT | anyPawn is tilted upside down | Undo a previous action |
-| | TAP | anyPawn is tapped on the top side | Increase a resource by one unit |
-|	| DOUBLE-TAP | anyPawn is double-tapped on the top side | Decrease a resource by one unit |
-| TCE | ENTERS\_[cID] | anyPawn is moved inside a cID sector of the board | Signal player's placement and movements among different board sectors |
-| | LEAVES\_[cID] | anyPawn is moved away from cID sector | Signal player's placement and movements among different board sectors  |
-|	TTE | APCHES\_[aID2] | anyPawn is moved close to another one | Trade a resource between two players |
-| | LEAVES\_[aID2] | anyPawn is moved away to another one | Break a relationship between two players |
+| Type | Interaction Event | HEX Code (B1,B2,B3) | Description | Sample mapping with game mechanics | Comments |
+|------|----|----|-----|----|------------------------------------|--------|
+| TE | SHAKE | CB | anyPawn is shaken | Throw a random number |
+| | TILT | CC |anyPawn is tilted upside down | Undo a previous action |
+| | TAP | C9 | anyPawn is tapped on the top side | Increase a resource by one unit |
+|	| DOUBLE-TAP | CA | anyPawn is double-tapped on the top side | Decrease a resource by one unit |
+| TCE | ENTERS\_[cID] | TBD, cID | anyPawn is moved inside a cID sector of the board | Signal player's placement and movements among different board sectors |
+| | LEAVES\_[cID] | TBD, cID | anyPawn is moved away from cID sector | Signal player's placement and movements among different board sectors  |
+|	TTE | APCHES\_[aID2, side] | TBD,aID,side | anyPawn is moved close to another one | Trade a resource between two players | Not implemented|
+| | LEAVES\_[aID2, side] | TBD,aID,side | anyPawn is moved away to another one | Break a relationship between two players | Not implemented |
 
 TCEs recognition is implemented by assigning and imprinting unique colors to different sectors of a game board (representing visual constraints to token’s locations). A color-sensor located on the bottom of anyPawn samples the color temperature of the surface the device is lying on, returning an unique color- code which is used as a fingerprint for board constraints, enabling to detect when anyPawn is moved between two sectors. TCE detection also makes use of accelerometer data to ensure that color sampling is performed only when the device is steady on a sector, deactivating the sensing routine when anyPawn being moved.
 TTEs are recognized by computing the distance between two pawns using RSSI (Received Signal Strength) data from the radio transmitter.
 
-### Digital feedbacks
+### Digital feedbacks (Commands sent to the anyPawn)
 
-| Type | Feedback | Description | Sample mapping with game mechanics |
-|------|----------|-------------|------------------------------------|
-| Visual | LED\_[color] | anyPawn lights up in the color defined by [color] | Show the status of a resource |
-| | MATRIX\_[text] | anyPawn top side display shows the string [text] | Shows player's action point allowance |
-| | MATRIX\_[icon] | anyPawn top side display shows the icon [icon]  | Show the result of a dice roll |
-|Haptic| SHRT\_HAPTIC | anyPawn produces a short haptic feedback | Signal a player to move to the next turn |
-|| LNG\_HATIC | anyPawn produces a long haptic feedback | Signal a player an action not allowed |
+| Type | Feedback | HEX Code (B1,B2,..B20) | Description | Sample mapping with game mechanics | Comments |
+|------|----------|-------------|----|----|----------------------------|------|
+| Visual | LED\_[color] | TBD,C1,C2,C3 | anyPawn lights up in the color defined by [color] | Show the status of a resource | C1,C2,C3 are RGB value in HEX |
+| | MATRIX\_[text] | TBD,Ch1,Ch2,... | anyPawn top side display shows the string [text] | Shows player's action point allowance | Ch1,Ch2,Ch3 are char in ASCII code, up to 19 characters |
+| | MATRIX\_[icon] | TBD,Ic | anyPawn top side display shows the icon [icon]  | Show the result of a dice roll | Ic is the ide of the Icon: XX for arrow, XX for ... |
+|Haptic| SHRT\_HAPTIC | TBD | anyPawn produces a short haptic feedback | Signal a player to move to the next turn |
+|| LNG\_HATIC | C8 | anyPawn produces a long haptic feedback | Signal a player an action not allowed |
 
 Token digital feedbacks are implemented using three different devices: an RGB LED, a 8x8 LED Matrix and a vibration motor.
 
