@@ -9,20 +9,32 @@
   #
 ********************************************************/
 
+
+
 #include <Wire.h>
 #include <WInterrupts.h>
 #include <RFduinoBLE.h>
 #include <string.h>
 
-#include <TokenFeedback.h>
-#include <TokenSoloEvent.h>
-#include <TokenConstraintEvent.h>
+#include "TokenFeedback.h"
+//#include "TokenSoloEvent.h"
+#include "TokenConstraintEvent.h"
+#include "Accelerometer.h"
 #include "protocol.h"
 
 // TOKEN FIRMWARE METADATA
 #define NAME    "AnyBoard Pawn"
 #define VERSION "0.1"
 #define UUID    "3191-6275-32g4"
+
+
+// BOARD CONSTANTS
+#define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
+#define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
+
+
+// LOG 
+//#define   LOG_TCS
 
 // VARIABLES FOR BLUETOOTH
 uint8_t sendData[20];
@@ -33,25 +45,15 @@ int i;
 int len;
 
 // Variables for Token Solo Event
-volatile uint8_t intSource = 0; // byte with interrupt informations
-int tab[] = {'0', '0'};
-int single_tap = 0;
-int double_tap = 0;
-int shake = 0;
-int inactivity = 0;
+Accelerometer *TokenAccelerometer;
 
 // Variables for Token Constraint Event
 uint8_t last_sector_ID = 0;
 uint8_t current_sector_ID = 0;
 
-// BOARD CONSTANTS
-#define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
-#define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
-
 // Initiation of the objects
 TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
 TokenConstraintEvent tokenConstraint = TokenConstraintEvent();
-TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
 
 void setup(void)
 {
@@ -61,11 +63,11 @@ void setup(void)
   // Enable interrupts :
   interrupts();
 
+  //Initialization of the accelerometer
+  TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
+  
   // Config of the rgb_sensor
   tokenConstraint.sensorConfig();
-
-  // Config of the accelerometer
-  tokenSolo.accelConfig();
 
   // Config of the LED matrix
   tokenFeedback.matrixConfig();
@@ -81,49 +83,50 @@ void setup(void)
 
 void loop(void)
 {
-  /************************************************************/
-  // Token solo event detection
-  if (digitalRead(ACC_INT1_PIN))
-  {
-    intSource = tokenSolo.accel.readRegister(ADXL345_REG_INT_SOURCE);
-
-    // Computation of data from the accelerometer to detect events
-    tokenSolo.accelComputation(tab, bitRead(intSource, 3), bitRead(intSource, 4), bitRead(intSource, 5), bitRead(intSource, 6), &inactivity, &single_tap, &double_tap, &shake);
-  }
-  // Sends the events detected to the game engine
-  if (single_tap)
-  {
-    sendData[0] = TAP;
-    RFduinoBLE.send((char*) sendData, 1);
-    single_tap = 0;
-  }
-  else if (double_tap)
-  {
-    sendData[0] = DOUBLE_TAP;
-    RFduinoBLE.send((char*) sendData, 1);
-    double_tap = 0;
-  }
-  else if (shake)
-  {
-    sendData[0] = SHAKE;
-    RFduinoBLE.send((char*) sendData, 1);
-    shake = 0;
-  }
-  if (tokenSolo.tiltComputation())
-  {
-    //Serial.println("TILT");
-    sendData[0] = TILT;
-    RFduinoBLE.send((char*) sendData, 1);
-  }
+    /************************************************************/
+    // Token solo event detection
+    TokenAccelerometer->RefreshValues();
+    
+    // Sends the events detected to the game engine
+    if (TokenAccelerometer->isTapped())
+    {
+      sendData[0] = TAP;
+      RFduinoBLE.send((char*) sendData, 1);
+        Serial.println("Taped !");
+    }
+    else if (TokenAccelerometer->isDoubleTapped())
+    {
+      sendData[0] = DOUBLE_TAP;
+      RFduinoBLE.send((char*) sendData, 1);
+        Serial.println("Double Tapped !");
+    }
+    else if (TokenAccelerometer->isShaked())
+    {
+      sendData[0] = SHAKE;
+      RFduinoBLE.send((char*) sendData, 1);
+        Serial.println("Shaked !");
+    }
+    if (TokenAccelerometer->isTilted())
+    {
+      //Serial.println("TILT");
+      sendData[0] = TILT;
+      RFduinoBLE.send((char*) sendData, 1);
+        Serial.println("Tilted !");
+    }
 
   /************************************************************/
      // Sector detection if the token is on the board
-     if (inactivity)
+     if (!TokenAccelerometer->isActive())
      {
        tokenConstraint.rgb_sensor.getData();
+       #ifdef LOG_TCS
+       Serial.print("C");Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
+       Serial.print("R");Serial.println(tokenConstraint.rgb_sensor.r);
+       Serial.print("G");Serial.println(tokenConstraint.rgb_sensor.g);
+       Serial.print("B");Serial.println(tokenConstraint.rgb_sensor.b);
+       #endif
      }
 
-     Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
 
      // Location of the pawn in function of the color temperature (ct)
      current_sector_ID = tokenConstraint.locate(current_sector_ID, map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
@@ -137,14 +140,13 @@ void loop(void)
          sendData[2] = last_sector_ID;
          RFduinoBLE.send((char*) sendData, 3);
          Serial.print("MOVE_TO: "); Serial.print(sendData[0],DEC); Serial.print(" , "); Serial.print(sendData[1],DEC); Serial.print(" , "); Serial.println(sendData[2],DEC);
-         //RFduinoBLE.sendInt((int) tokenConstraint.rgb_sensor.ct);
-         //RFduinoBLE.sendFloat(tokenConstraint.rgb_sensor.ct);
+         
          // Update sector_ID variables
          last_sector_ID = current_sector_ID;
      }
     /************************************************************/
 
-  delay(500); // Important delay, do not delete it !
+    delay(100); // Important delay, do not delete it ! Why ?? I want to delete this one !!
 }
 
 // Code that executes everytime token is being connected to
