@@ -16,11 +16,10 @@
 #include <RFduinoBLE.h>
 #include <string.h>
 
-#include "TokenFeedback.h"
-//#include "TokenSoloEvent.h"
-#include "TokenConstraintEvent.h"
-#include "Accelerometer.h"
 #include "protocol.h"
+#include "TokenFeedback.h"
+#include "TokenSoloEvent_Handler.h"
+#include "TokenConstraintEvent.h"
 
 // TOKEN FIRMWARE METADATA
 #define NAME    "AnyBoard Pawn"
@@ -34,7 +33,7 @@
 
 
 // LOG 
-//#define   LOG_TCS
+#define   LOG_TCS
 
 // VARIABLES FOR BLUETOOTH
 uint8_t sendData[20];
@@ -45,6 +44,7 @@ int i;
 int len;
 
 // Variables for Token Solo Event
+TokenSoloEvent_Handler TokenSoloEvent;
 Accelerometer *TokenAccelerometer;
 
 // Variables for Token Constraint Event
@@ -65,6 +65,9 @@ void setup(void)
 
   //Initialization of the accelerometer
   TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
+
+  // Initialization of the TokenSoloEvent_Handler
+  TokenSoloEvent.setAccelerometer(TokenAccelerometer);
   
   // Config of the rgb_sensor
   tokenConstraint.sensorConfig();
@@ -85,35 +88,14 @@ void loop(void)
 {
     /************************************************************/
     // Token solo event detection
-    TokenAccelerometer->RefreshValues();
-    
-    // Sends the events detected to the game engine
-    if (TokenAccelerometer->isTapped())
-    {
-      sendData[0] = TAP;
-      RFduinoBLE.send((char*) sendData, 1);
-        Serial.println("Taped !");
-    }
-    else if (TokenAccelerometer->isDoubleTapped())
-    {
-      sendData[0] = DOUBLE_TAP;
-      RFduinoBLE.send((char*) sendData, 1);
-        Serial.println("Double Tapped !");
-    }
-    else if (TokenAccelerometer->isShaked())
-    {
-      sendData[0] = SHAKE;
-      RFduinoBLE.send((char*) sendData, 1);
-        Serial.println("Shaked !");
-    }
-    if (TokenAccelerometer->isTilted())
-    {
-      //Serial.println("TILT");
-      sendData[0] = TILT;
-      RFduinoBLE.send((char*) sendData, 1);
-        Serial.println("Tilted !");
-    }
+    int Event = TokenSoloEvent.pollEvent();
 
+    if(Event != 0x00)
+    {
+      sendData[0] = Event;
+      RFduinoBLE.send((char*) sendData, 1);
+    }
+    
   /************************************************************/
      // Sector detection if the token is on the board
      if (!TokenAccelerometer->isActive())
@@ -121,9 +103,9 @@ void loop(void)
        tokenConstraint.rgb_sensor.getData();
        #ifdef LOG_TCS
        Serial.print("C");Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
-       Serial.print("R");Serial.println(tokenConstraint.rgb_sensor.r);
-       Serial.print("G");Serial.println(tokenConstraint.rgb_sensor.g);
-       Serial.print("B");Serial.println(tokenConstraint.rgb_sensor.b);
+       Serial.print("R");Serial.println(tokenConstraint.rgb_sensor.r_comp);
+       Serial.print("G");Serial.println(tokenConstraint.rgb_sensor.g_comp);
+       Serial.print("B");Serial.println(tokenConstraint.rgb_sensor.b_comp);
        #endif
      }
 

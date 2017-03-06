@@ -9,9 +9,11 @@
 #define ACC_FIR_SIZE          (uint8_t)10
 #define ACC_SHAKE_THRESH      100
 
-#define   LOG_ACC
+//#define   LOG_ACC
 
-class Accelerometer
+#include "TokenSoloEvent.h"
+
+class Accelerometer : public TokenSoloEvent
 {
 
     public:
@@ -30,7 +32,7 @@ class Accelerometer
 
       bool isActive();        // Return the state of the sensor (true = active, false = inactive)
     
-      void RefreshValues ();  // Reads the accelerations components
+      int RefreshValues ();  // Reads the accelerations components
 
       enum Axis{X_AXIS = 1, Y_AXIS = 2};
       

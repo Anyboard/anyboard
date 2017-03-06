@@ -1,6 +1,9 @@
 #include "Accelerometer.h"
+// Unfortunatelly due to Arduino extrem "simplification" of the build process we need to set the absolute path
+// to the protocol.h file... Not really sexy..
+#include "C:\Anyboard\anyboard\anypawn\firmware\anypawn\protocol.h"
 
-Accelerometer::Accelerometer(int Pin)
+Accelerometer::Accelerometer(int Pin) : TokenSoloEvent()
 {
     InterruptPin = Pin;
     Tapped = false;
@@ -118,8 +121,11 @@ bool Accelerometer::isActive()        // Return the state of the sensor (true = 
 
 
 
-void Accelerometer::RefreshValues() // This function has to be adapted to the current used sensor
+int Accelerometer::RefreshValues() // This function has to be adapted to the current used sensor
 {
+    Triggered = false;
+    EventCode = 0;
+  
 /**********************************************
  * Read new values, compute the new low pass
  * FIR outputs and store the delta with previous 
@@ -162,6 +168,13 @@ void Accelerometer::RefreshValues() // This function has to be adapted to the cu
     x_Filtered /= ACC_FIR_SIZE;  
     y_Filtered /= ACC_FIR_SIZE;
     z_Filtered /= ACC_FIR_SIZE;
+
+    #ifdef LOG_ACC
+    Serial.print("X");Serial.println(x, DEC);
+    Serial.print("Y");Serial.println(y, DEC);
+    Serial.print("Z");Serial.println(z, DEC);
+    #endif
+    
 /**********************************************
  * Check if the pawn is tilted using the output
  * of a low pass FIR 
@@ -171,18 +184,25 @@ void Accelerometer::RefreshValues() // This function has to be adapted to the cu
     {
         Tilted = true;
         TiltAxis = Accelerometer::Y_AXIS | Accelerometer::X_AXIS;
+
+        Triggered = true;
+        EventCode = TILT;
     }
     
     else if(abs(x_Filtered) > ACC_SHAKE_THRESH)
     {
         Tilted = true;
         TiltAxis = Accelerometer::X_AXIS;
+        Triggered = true;
+        EventCode = TILT;
     }
     
     else if(abs(y_Filtered) > ACC_SHAKE_THRESH)
     {
         Tilted = true;
         TiltAxis = Accelerometer::Y_AXIS;
+        Triggered = true;
+        EventCode = TILT;
     }
 
     else
@@ -203,18 +223,29 @@ void Accelerometer::RefreshValues() // This function has to be adapted to the cu
                 {
                     DoubleTapped = 1;
                     Tapped = 0;
+                    
+                    Triggered = true;
+                    EventCode = DOUBLE_TAP;
                 }
             
                 else
                 {
                   DoubleTapped = 0;
                   Tapped = 1;
+                  
+                  Triggered = true;
+                  EventCode = TAP;
                 }
             }
         }
   
         else if(abs(d_x) > 200 || abs(d_y) > 200)
+        {
           Shaked = true;
+            
+          Triggered = true;
+          EventCode = SHAKE;
+        }
       
         if(Source & ACC_INT_ACT)
         {
@@ -239,6 +270,6 @@ void Accelerometer::RefreshValues() // This function has to be adapted to the cu
 
 
     
-    return;
+    return EventCode;
   
 }
