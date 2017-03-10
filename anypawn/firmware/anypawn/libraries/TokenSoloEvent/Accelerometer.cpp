@@ -1,9 +1,6 @@
 #include "Accelerometer.h"
-// Unfortunatelly due to Arduino extrem "simplification" of the build process we need to set the absolute path
-// to the protocol.h file... Not really sexy..
-#include "C:\Anyboard\anyboard\anypawn\firmware\anypawn\protocol.h"
 
-Accelerometer::Accelerometer(int Pin) : TokenSoloEvent()
+Accelerometer::Accelerometer(int Pin)
 {
     InterruptPin = Pin;
     Tapped = false;
@@ -121,11 +118,9 @@ bool Accelerometer::isActive()        // Return the state of the sensor (true = 
 
 
 
-int Accelerometer::RefreshValues() // This function has to be adapted to the current used sensor
+void Accelerometer::RefreshValues() // This function has to be adapted to the current used sensor
 {
-    Triggered = false;
-    EventCode = 0;
-  
+ 
 /**********************************************
  * Read new values, compute the new low pass
  * FIR outputs and store the delta with previous 
@@ -184,25 +179,18 @@ int Accelerometer::RefreshValues() // This function has to be adapted to the cur
     {
         Tilted = true;
         TiltAxis = Accelerometer::Y_AXIS | Accelerometer::X_AXIS;
-
-        Triggered = true;
-        EventCode = TILT;
     }
     
     else if(abs(x_Filtered) > ACC_SHAKE_THRESH)
     {
         Tilted = true;
         TiltAxis = Accelerometer::X_AXIS;
-        Triggered = true;
-        EventCode = TILT;
     }
     
     else if(abs(y_Filtered) > ACC_SHAKE_THRESH)
     {
         Tilted = true;
         TiltAxis = Accelerometer::Y_AXIS;
-        Triggered = true;
-        EventCode = TILT;
     }
 
     else
@@ -223,18 +211,12 @@ int Accelerometer::RefreshValues() // This function has to be adapted to the cur
                 {
                     DoubleTapped = 1;
                     Tapped = 0;
-                    
-                    Triggered = true;
-                    EventCode = DOUBLE_TAP;
                 }
             
                 else
                 {
                   DoubleTapped = 0;
                   Tapped = 1;
-                  
-                  Triggered = true;
-                  EventCode = TAP;
                 }
             }
         }
@@ -242,9 +224,6 @@ int Accelerometer::RefreshValues() // This function has to be adapted to the cur
         else if(abs(d_x) > 200 || abs(d_y) > 200)
         {
           Shaked = true;
-            
-          Triggered = true;
-          EventCode = SHAKE;
         }
       
         if(Source & ACC_INT_ACT)
@@ -268,8 +247,5 @@ int Accelerometer::RefreshValues() // This function has to be adapted to the cur
         }
     }
 
-
-    
-    return EventCode;
-  
+    return;  
 }

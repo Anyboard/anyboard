@@ -1,3 +1,12 @@
+#ifndef PROTOCOL_h
+#define PROTOCOL_h
+
+// TOKEN FIRMWARE METADATA
+#define NAME    "AnyBoard Pawn"
+#define VERSION "0.1"
+#define UUID    "3191-6275-32g4"
+
+
 // Status commands
 const uint8_t GET_NAME             = 32;
 const uint8_t GET_VERSION          = 33;
@@ -37,3 +46,6 @@ const uint8_t DISPLAY_DOWN		     = 210;
 const uint8_t LED_OFF2             = 128;
 const uint8_t LED_ON2              = 129;
 const uint8_t LED_BLINK            = 130;
+
+
+#endif
