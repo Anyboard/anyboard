@@ -44,6 +44,7 @@ TTEs are recognized by computing the distance between two pawns using RSSI (Rece
 | Visual | LED\_[color] | TBD,C1,C2,C3 | anyPawn lights up in the color defined by [color] | Show the status of a resource | C1,C2,C3 are RGB value in HEX |
 | | MATRIX\_[text] | TBD,Ch1,Ch2,... | anyPawn top side display shows the string [text] | Shows player's action point allowance | Ch1,Ch2,Ch3 are char in ASCII code, up to 19 characters |
 | | MATRIX\_[icon] | TBD,Ic | anyPawn top side display shows the icon [icon]  | Show the result of a dice roll | Ic is the ide of the Icon: XX for arrow, XX for ... |
+| | MATRIX\_[raw matrix] | TBD,B1,B2,B3,B4,B5,B6,B7,B8 | anyPawn top side display show a 8x8 point matrix | B1...B8 represent the tate (1 or 0) of the 64 LEDs in the matrix |
 |Haptic| SHRT\_HAPTIC | TBD | anyPawn produces a short haptic feedback | Signal a player to move to the next turn |
 || LNG\_HATIC | C8 | anyPawn produces a long haptic feedback | Signal a player an action not allowed |
 
