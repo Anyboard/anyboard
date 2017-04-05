@@ -40,7 +40,7 @@ TTEs are recognized by computing the distance between two pawns using RSSI (Rece
 ### Digital feedbacks (Commands sent to the anyPawn)
 
 | Type | Feedback | HEX Code (B1,B2,..B20) | Description | Sample mapping with game mechanics | Comments |
-|------|----------|-------------|----|----|----------------------------|------|
+|------|----------|-------------|----|----|----------------------------|
 | Visual | LED\_[color] | TBD,C1,C2,C3 | anyPawn lights up in the color defined by [color] | Show the status of a resource | C1,C2,C3 are RGB value in HEX |
 | | MATRIX\_[text] | TBD,Ch1,Ch2,... | anyPawn top side display shows the string [text] | Shows player's action point allowance | Ch1,Ch2,Ch3 are char in ASCII code, up to 19 characters |
 | | MATRIX\_[icon] | TBD,Ic | anyPawn top side display shows the icon [icon]  | Show the result of a dice roll | Ic is the ide of the Icon: XX for arrow, XX for ... |
