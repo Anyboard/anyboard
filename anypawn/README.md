@@ -24,7 +24,7 @@ Interaction events and digital feedbacks commands are exchanged between anyPawns
 ### Interaction events (Events sent from the anyPawn)
 
 | Type | Interaction Event | HEX Code (B1,B2,B3) | Description | Sample mapping with game mechanics | Comments |
-|------|----|----|-----|----|------------------------------------|--------|
+|------|----|----|-----|----|------------------------------------|
 | TE | SHAKE | CB | anyPawn is shaken | Throw a random number |
 | | TILT | CC |anyPawn is tilted upside down | Undo a previous action |
 | | TAP | C9 | anyPawn is tapped on the top side | Increase a resource by one unit |
