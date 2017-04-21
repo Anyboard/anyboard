@@ -29,7 +29,7 @@ Interaction events and digital feedbacks commands are exchanged between anyPawns
 | | TILT | CC |anyPawn is tilted upside down | Undo a previous action |
 | | TAP | C9 | anyPawn is tapped on the top side | Increase a resource by one unit |
 |	| DOUBLE-TAP | CA | anyPawn is double-tapped on the top side | Decrease a resource by one unit |
-| | ROTATE | DC, PAR | one parameter to define clockwise or counterclockwise rotation, 0x01 (1) if clockwise and 0xFF (-1) if counter clockwise |  
+| | ROTATE | DC, PAR | PAR defines clockwise or counterclockwise rotation, 0x01 (1) if clockwise and 0xFF (-1) if counter clockwise |  
 | TCE | ENTERS\_[cID] | TBD, cID | anyPawn is moved inside a cID sector of the board | Signal player's placement and movements among different board sectors |
 | | LEAVES\_[cID] | TBD, cID | anyPawn is moved away from cID sector | Signal player's placement and movements among different board sectors  |
 |	TTE | APCHES\_[aID2, side] | TBD,aID,side | anyPawn is moved close to another one | Trade a resource between two players | Not implemented|
