@@ -27,6 +27,7 @@ const uint8_t TAP				           = 201; //C9
 const uint8_t DOUBLE_TAP		       = 202; //CA
 const uint8_t SHAKE				         = 203; //CB
 const uint8_t TILT                 = 204; //CC
+const uint8_t ROTATION             = 220;
 
 //Token-constraint events
 const uint8_t MOVE                 = 194; //C2 (+ 2nd and 3rd bytes for current and last sector)

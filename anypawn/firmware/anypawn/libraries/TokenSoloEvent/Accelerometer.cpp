@@ -23,16 +23,30 @@ Accelerometer::Accelerometer(int Pin)
 
     pinMode(InterruptPin, INPUT);
     
-    Serial.println("Initializing ADXL345...");
+    Serial.println("Checking for ADXL345");
     accel = Adafruit_ADXL345_Unified(12345);
-
-    /* Initialise the sensor */
-    if(!accel.begin())
+	
+	Wire.begin();
+	Wire.beginTransmission(ADXL345_ADDRESS);
+	#if ARDUINO >= 100
+	Wire.write((uint8_t)0x00);
+	#else
+	Wire.send(0x00);
+	#endif
+	
+    if(Wire.endTransmission() != 0)
     {
-      /* There was a problem detecting the ADXL345 ... check your connections */
-      Serial.println("Ooops, no ADXL345 detected ... Check your wiring!");
-      while(1);
+      Serial.println("No ADXL345");
+	  SensorAvailable = false;	  
+	  return;
     }
+	
+	else
+	{
+	  accel.begin();
+      Serial.println("ADXL345 Available");
+	  SensorAvailable = true;	  
+	}
 
     /* Set the range to whatever is appropriate for your project */
     accel.setRange(ADXL345_RANGE_2_G);
@@ -127,6 +141,9 @@ void Accelerometer::RefreshValues() // This function has to be adapted to the cu
  * values
  *********************************************/
     
+	if(SensorAvailable == false)
+		return;
+	
     int new_x = accel.getX();
     int new_y = accel.getY();
     int new_z = accel.getZ();

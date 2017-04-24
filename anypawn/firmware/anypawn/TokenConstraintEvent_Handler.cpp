@@ -7,12 +7,20 @@ TokenConstraintEvent_Handler::TokenConstraintEvent_Handler(BLE_Handler *Handler)
     EventCode = 0x00;
     CurrentSector_ID = LastSector_ID = 0;
     _ColorSensor = NULL;
+    ColorSensor_Timing = 0;
+}
+
+void TokenConstraintEvent_Handler::HandleTime(unsigned int ElapsedTime)
+{
+    ColorSensor_Timing += ElapsedTime;
 }
 
 void TokenConstraintEvent_Handler::pollEvent()    // If an event has occured returns the event code
 {
-    if(_ColorSensor != NULL)
+    if(_ColorSensor != NULL && ColorSensor_Timing >= COLOR_SENSOR_UPDATE)
     {
+        ColorSensor_Timing = 0;
+        
         _ColorSensor->RefreshValues();
         CurrentSector_ID = Locate(_ColorSensor->ColorTemp, _ColorSensor->Clear);
         

@@ -33,6 +33,8 @@ class Accelerometer
       void RefreshValues ();  // Reads the accelerations components
 
       enum Axis{X_AXIS = 1, Y_AXIS = 2};
+	  
+	  bool SensorAvailable;
       
     private:
       Adafruit_ADXL345_Unified accel;  /// Object representing the used sensor
