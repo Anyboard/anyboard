@@ -26,6 +26,7 @@ class Haptic
 
         void RefreshValues();
         void HandleTime(unsigned int ElapsedTime);
+		bool getState();
 		
 	  private:
         void StartVibrate();

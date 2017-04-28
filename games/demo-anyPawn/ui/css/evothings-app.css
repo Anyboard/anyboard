@@ -662,6 +662,24 @@ input.btn-group.black:checked + label {
 	background-color: #000000;
 }
 
+/*  Color: "Pink"
+	Class name: pink
+    ------------------ */
+.color_pink { color: #CC33CC }
+.bg_pink, input.pink, button.pink, ul.pink li,
+input.pink + label {
+	background-color: #CC33CC;
+}
+/* Downpressed button. */ 
+button.pink:active, button.pink.pressed,
+/* Input element with adjacent label. */
+input.btn-group:active + label.pink,
+input.btn-group.pink:active + label,
+input.btn-group:checked + label.pink,
+input.btn-group.pink:checked + label {
+	background-color: #CC0099;
+}
+
 @media	screen and (orientation: landscape) and (-webkit-min-device-pixel-ratio : 2),
 		screen and (orientation: landscape) and (min--moz-device-pixel-ratio: 2),
 		screen and (orientation: landscape) and (min-device-pixel-ratio : 2) {

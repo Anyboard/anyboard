@@ -4,8 +4,10 @@
 #include <RFduinoBLE.h>
 #include <StackArray.h>
 #include "protocol.h"
-#include "TokenFeedback.h"
+#include "TokenFeedback_Handler.h"
+#include "TokenConstraintEvent_Handler.h"
 
+class TokenConstraintEvent_Handler;
 class TokenEvent;
 
 class BLE_Handler
@@ -17,6 +19,8 @@ class BLE_Handler
       void ReceiveEvent(char *Data, int Lenght);
       void ProcessEvents();
       void Emit(TokenEvent *Event);
+
+      String AdvertiseName;
 
       bool Connected;
       bool EventReceived;   // true if an event has been Received, cleared with a call to ProcessEvents()
@@ -31,7 +35,9 @@ class TokenEvent
   public:
     TokenEvent();
     void set(uint8_t Code, char* Param = NULL);
-     
+
+    String getParameterString();
+    
     uint8_t EventCode;
     char Parameters[19];
      

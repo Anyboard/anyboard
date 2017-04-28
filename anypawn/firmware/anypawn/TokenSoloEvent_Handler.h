@@ -29,7 +29,7 @@ class TokenSoloEvent_Handler
       
       //Sensors source of TokenSoloEvent
       InertialCentral_LSM9DS0 *_InertialCentral;
-      #define INERTIAL_CENTRAL_UPDATE  00   //Accelerometer refresh period
+      #define INERTIAL_CENTRAL_UPDATE  50   //Accelerometer refresh period
       unsigned int InertialCentral_Timing;
 };
 

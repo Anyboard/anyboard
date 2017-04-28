@@ -4,6 +4,7 @@
 #define FIR_BATTERY_SAMPLES 10
 
 //LOG
+//#define LOG_CONSTRAINT_EVENT
 #ifdef LOG_CONSTRAINT_EVENT
 	#define   LOG_TCS
 	#define   LOG_BATTERY

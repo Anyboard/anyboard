@@ -48,21 +48,21 @@ InertialCentral_LSM9DS0::InertialCentral_LSM9DS0()
 
     // 1.) Set the accelerometer range
     Sensor.setupAccel(Sensor.LSM9DS0_ACCELRANGE_2G);
-    //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_4G);
-    //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_6G);
-    //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_8G);
-    //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_16G);
+    //Sensor.setupAccel(Sensor.LSM9DS0_ACCELRANGE_4G);
+    //Sensor.setupAccel(Sensor.LSM9DS0_ACCELRANGE_6G);
+    //Sensor.setupAccel(Sensor.LSM9DS0_ACCELRANGE_8G);
+    //Sensor.setupAccel(Sensor.LSM9DS0_ACCELRANGE_16G);
     
     // 2.) Set the magnetometer sensitivity
     Sensor.setupMag(Sensor.LSM9DS0_MAGGAIN_2GAUSS);
-    //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_4GAUSS);
-    //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_8GAUSS);
-    //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_12GAUSS);
+    //Sensor.setupMag(Sensor.LSM9DS0_MAGGAIN_4GAUSS);
+    //Sensor.setupMag(Sensor.LSM9DS0_MAGGAIN_8GAUSS);
+    //Sensor.setupMag(Sensor.LSM9DS0_MAGGAIN_12GAUSS);
     
     // 3.) Setup the gyroscope
     Sensor.setupGyro(Sensor.LSM9DS0_GYROSCALE_245DPS);
-    //lsm.setupGyro(lsm.LSM9DS0_GYROSCALE_500DPS);
-    //lsm.setupGyro(lsm.LSM9DS0_GYROSCALE_2000DPS);
+    //Sensor.setupGyro(Sensor.LSM9DS0_GYROSCALE_500DPS);
+    //Sensor.setupGyro(Sensor.LSM9DS0_GYROSCALE_2000DPS);
 
     //Setting up click detections (see en.DM00087365.pdf @ p.67)
     // Also see STM AN2768 for further explanations on the settings
@@ -218,10 +218,7 @@ void InertialCentral_LSM9DS0::RefreshValues() // This function has to be adapted
     Serial.print("Z");Serial.println(Sensor.gyroData.z, DEC);
     #endif
     
-/**********************************************
- * Check if the pawn is tilted using the output
- * of a low pass FIR 
- *********************************************/
+
 
     int IntSource = 0;
     IntSource = Sensor.read8(XMTYPE, 0x39);
@@ -281,7 +278,11 @@ void InertialCentral_LSM9DS0::RefreshValues() // This function has to be adapted
             TapWindow_Timing = 0;
         }
     }
-
+	
+/**********************************************
+ * Check if the pawn is tilted using the output
+ * of a low pass FIR 
+ *********************************************/
     if(ShakeTilt_Timing >= SHAKE_TILT_TIME)
     {
         ShakeTilt_Timing = 0;
@@ -322,34 +323,38 @@ void InertialCentral_LSM9DS0::RefreshValues() // This function has to be adapted
         Rotation = -1;
         
     // Rotation Events
-    if(RotSampling_Timing >= ROT_SAMPLING_TIME)
-    {
-        RotSampling_Timing = 0;
-        
-        int new_m_x = Sensor.magData.x;
-        int new_m_y = Sensor.magData.y;
-        int new_m_z = Sensor.magData.z;
-        
-        if(abs(g_x) < 1500 || abs(g_y) < 1500 ||abs(g_z) < 1500)    // The sensor isn't being rotated
-        {
-            if(abs(new_m_x - MagCurrent_x) > MAG_EVENT_THRESH || abs(new_m_y - MagCurrent_y) > MAG_EVENT_THRESH)
-            {
-                if(Rotation > 0)
-                {
-                  TrigoRotated = true;
-                  HorraireRotated = false;
-                }
-                else if(Rotation < 0)
-                {
-                  TrigoRotated = false;
-                  HorraireRotated = true;
-                }
+	
+	if(Tilted == false)
+	{
+		if(RotSampling_Timing >= ROT_SAMPLING_TIME)
+		{
+			RotSampling_Timing = 0;
+			
+			int new_m_x = Sensor.magData.x;
+			int new_m_y = Sensor.magData.y;
+			int new_m_z = Sensor.magData.z;
+			
+			if(abs(g_x) < 1500 || abs(g_y) < 1500 ||abs(g_z) < 1500)    // The sensor isn't being rotated
+			{
+				if(abs(new_m_x - MagCurrent_x) > MAG_EVENT_THRESH || abs(new_m_y - MagCurrent_y) > MAG_EVENT_THRESH)
+				{
+					if(Rotation > 0)
+					{
+					  TrigoRotated = true;
+					  HorraireRotated = false;
+					}
+					else if(Rotation < 0)
+					{
+					  TrigoRotated = false;
+					  HorraireRotated = true;
+					}
 
-                MagCurrent_x = new_m_x;
-                MagCurrent_y = new_m_y;
-            }
-        }
-    }
+					MagCurrent_x = new_m_x;
+					MagCurrent_y = new_m_y;
+				}
+			}
+		}
+	}
     
     return;  
 }

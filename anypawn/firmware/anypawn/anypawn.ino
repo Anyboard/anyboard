@@ -16,47 +16,51 @@
 #include <RFduinoBLE.h>
 #include <string.h>
 
-//#include "protocol.h"
 #include "BLE_Handler.h"
-#include "TokenFeedback.h"
 #include "TokenSoloEvent_Handler.h"
 #include "TokenConstraintEvent_Handler.h"
+//#include "TokenFeedback_Handler.h"
 
 
 // BOARD CONSTANTS
 #define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
 #define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
+#define LED_R_PIN           0
+#define LED_G_PIN           1
+#define LED_B_PIN           2
+
 //Variables for timing
 uint_fast16_t volatile number_of_ms = 10;     // ms
-bool UpdateInertialCentral = false;
 
 // Handlers
 BLE_Handler BLE;
 TokenSoloEvent_Handler TokenSoloEvent(&BLE);
 TokenConstraintEvent_Handler TokenConstraintEvent(&BLE);
+TokenFeedback_Handler TokenFeedback;
 
 // Sensors and actuators
 Accelerometer *TokenAccelerometer = NULL;
 InertialCentral_LSM9DS0 *InertialCentral = NULL;
 ColorSensor *TokenColorSensor = NULL;
-
-// Initiation of the objects
-TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
+Haptic *HapticMotor = NULL;
+RGB_LED *LED = NULL;
+Matrix8x8 *Matrix = NULL;
 
 
 void setup(void)
 {
   override_uart_limit = true;
-  Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES
+  //Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES Comment if you want to use the LED
   interrupts(); // Enable interrupts
 
-
-  
-  //Initialization of the Sensors
+  //Initialization of the Sensors and actuators
   TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
   TokenColorSensor = new ColorSensor();
   InertialCentral = new InertialCentral_LSM9DS0();
+  HapticMotor = new Haptic(VIBRATING_M_PIN);
+  LED = new RGB_LED(LED_R_PIN, LED_G_PIN, LED_B_PIN, 2); // Type 1 is common anode, Type 2 is common cathode
+  Matrix = new Matrix8x8();
   
   // Initialization of the TokenSoloEvent_Handler
   TokenSoloEvent.setAccelerometer(TokenAccelerometer);
@@ -65,41 +69,70 @@ void setup(void)
   // Initialization of the TokenConstraintEvent_Handler
   TokenConstraintEvent.setColorSensor(TokenColorSensor);
 
-
+  //Initialization of the TokenFeedback_Handler
+  TokenFeedback.setRGB_LED(LED);
+  TokenFeedback.setHapticMotor(HapticMotor);
+  TokenFeedback.setMatrix8x8(Matrix);
   
   // Configure the RFduino BLE properties
-  RFduinoBLE.deviceName = "AnyPawn";
+  char DeviceName[8] = {0};
+  BLE.AdvertiseName.toCharArray(DeviceName, 8);
+  RFduinoBLE.deviceName = DeviceName;
   RFduinoBLE.txPowerLevel = -20;
-
-  // Start the BLE stack
   RFduinoBLE.begin();
+  
   Serial.println("Setup OK!");
-  // Config of the LED matrix
-  tokenFeedback.matrixConfig();
-  tokenFeedback.displayX();
-  delay(1000);
-  tokenFeedback.matrix.clear();
-  tokenFeedback.matrix.writeDisplay();
   
   timer_config();
 }
 
 void loop(void)
 {
-    
-    TokenSoloEvent.pollEvent();
-
-    if (!TokenAccelerometer->isActive())
-      TokenConstraintEvent.pollEvent();
-    
     BLE.ProcessEvents();
-    delay(10); // Important delay, do not delete it ! Why ?? I want to delete this one !!
+    TokenFeedback.UpdateFeedback();
+    
+    if(TokenFeedback.isVibrating() == false)
+      TokenSoloEvent.pollEvent();
+
+    if (TokenAccelerometer->isActive() == false)
+      TokenConstraintEvent.pollEvent();
 }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////  Private system method used to set the time basis throught a Timer /////////////////////////////////////////
+
 #define TRIGGER_INTERVAL 1000      // ms
 
+// This function updates the internal timers of each Handler
+void TIMER1_Interrupt(void)
+{
+    if (NRF_TIMER1->EVENTS_COMPARE[0] != 0)
+    {        
+        TokenSoloEvent.HandleTime(number_of_ms);
+        TokenConstraintEvent.HandleTime(number_of_ms);
+        TokenFeedback.HandleTime(number_of_ms);
+        
+        NRF_TIMER1->EVENTS_COMPARE[0] = 0;
+    }
+}
+
+// Timer configuration
 void timer_config(void)
 {
     NRF_TIMER1->TASKS_STOP = 1;                                     // Stop timer
@@ -126,13 +159,4 @@ void timer_config(void)
     NRF_TIMER1->TASKS_START = 1;                                                                                               // Start TIMER
 }
 
-void TIMER1_Interrupt(void)
-{
-    if (NRF_TIMER1->EVENTS_COMPARE[0] != 0)
-    {        
-        TokenSoloEvent.HandleTime(number_of_ms);
-        TokenConstraintEvent.HandleTime(number_of_ms);
-        
-        NRF_TIMER1->EVENTS_COMPARE[0] = 0;
-    }
-}
+

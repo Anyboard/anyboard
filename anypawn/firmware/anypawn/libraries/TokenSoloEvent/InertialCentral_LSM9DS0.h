@@ -89,7 +89,7 @@ class InertialCentral_LSM9DS0
       bool FirstTap;      // Goes true if a first tap has been detected and remains true until the TapWindow_Timing is over
       bool SecondTap;
       bool TapDebounce;
-      #define TAP_WINDOW_TIME   500   //Opening time of the Tap window 
+      #define TAP_WINDOW_TIME   650   //Opening time of the Tap window 
       #define TAP_LATENCY_TIME  150   // Latency after the first tap
       #define TAP_DEBOUNCE_TIME 400   // Debounce time after a succeeded click
       unsigned int TapWindow_Timing; // Count the time since the start of the TapWindow opened.

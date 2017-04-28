@@ -1799,8 +1799,8 @@ AnyBoard.BaseToken.prototype.ledOn = function(value, win, fail) {
  */
 AnyBoard.BaseToken.prototype.vibrate = function(value, win, fail) {
     if (!this.driver.hasOwnProperty('vibrate')) {
-        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
-        fail && fail('This token has not implemented ledOn');
+        AnyBoard.Logger.warn('This token has not implemented vibrate', this);
+        fail && fail('This token has not implemented vibrate');
     } else {
         this.driver.vibrate(this, value, win, fail);
     }
@@ -1808,19 +1808,29 @@ AnyBoard.BaseToken.prototype.vibrate = function(value, win, fail) {
 
 AnyBoard.BaseToken.prototype.count = function(value, win, fail) {
     if (!this.driver.hasOwnProperty('count')) {
-        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
-        fail && fail('This token has not implemented ledOn');
+        AnyBoard.Logger.warn('This token has not implemented count', this);
+        fail && fail('This token has not implemented count');
     } else {
         this.driver.count(this, value, win, fail);
     }
 };
 
-AnyBoard.BaseToken.prototype.displayX = function(value, win, fail) {
+AnyBoard.BaseToken.prototype.displayPattern = function(pattern, win, fail) {
     if (!this.driver.hasOwnProperty('count')) {
-        AnyBoard.Logger.warn('This token has not implemented ledOn', this);
-        fail && fail('This token has not implemented ledOn');
+        AnyBoard.Logger.warn('This token has not implemented displayPattern', this);
+        fail && fail('This token has not implemented displayPattern');
     } else {
-        this.driver.displayX(this, value, win, fail);
+        this.driver.displayPattern(this, pattern, win, fail);
+    }
+};
+
+
+AnyBoard.BaseToken.prototype.paperSelect = function(paper, win, fail) {
+    if (!this.driver.hasOwnProperty('count')) {
+        AnyBoard.Logger.warn('This token has not implemented paperSelect', this);
+        fail && fail('This token has not implemented paperSelect');
+    } else {
+        this.driver.paperSelect(this, paper, win, fail);
     }
 };
 
@@ -1836,12 +1846,12 @@ AnyBoard.BaseToken.prototype.displayX = function(value, win, fail) {
  * // blinks blue
  * existingToken.ledBlink("blue");
  */
-AnyBoard.BaseToken.prototype.ledBlink = function(value, win, fail) {
+AnyBoard.BaseToken.prototype.ledBlink = function(Time, Period, win, fail) {
     if (!this.driver.hasOwnProperty('ledBlink')) {
         AnyBoard.Logger.warn('This token has not implemented ledBlink', this);
         fail && fail('This token has not implemented ledBlink');
     } else {
-        this.driver.ledBlink(this, value, win, fail);
+        this.driver.ledBlink(this, Time, Period, win, fail);
     }
 };
 

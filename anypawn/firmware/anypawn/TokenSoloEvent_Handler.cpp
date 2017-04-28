@@ -29,6 +29,8 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
     uint8_t InertialCentralEvent = 0;
     char isRotated = 0;
 
+    extern TokenFeedback_Handler TokenFeedback;
+
     if(_AccelerometerAvailable == true && Accelerometer_Timing >= ACCELEROMETER_UPDATE)
     {
         Accelerometer_Timing = 0;
@@ -48,7 +50,7 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
             AccEvent = TILT;
     }
 
-    if(_InertialCentralAvailable == true && InertialCentral_Timing >= ACCELEROMETER_UPDATE)
+    if(_InertialCentralAvailable == true && InertialCentral_Timing >= INERTIAL_CENTRAL_UPDATE)
     {
         InertialCentral_Timing = 0;
         isRotated = _InertialCentral->isRotated();
@@ -56,7 +58,9 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
         _InertialCentral->RefreshValues();
         
         if (_InertialCentral->isTapped())
+        {
             InertialCentralEvent = TAP;
+        }
         
         else if (_InertialCentral->isDoubleTapped())
             InertialCentralEvent = DOUBLE_TAP;
@@ -69,10 +73,7 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
         
         else if(isRotated != 0)
         {
-            if(isRotated == 1)
-                InertialCentralEvent = ROTATION;
-            else if(isRotated == -1)
-                InertialCentralEvent = ROTATION;
+            InertialCentralEvent = ROTATION;
         }
     }
     
@@ -91,7 +92,10 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
         TokenEvent Event;
         
         if(EventCode == ROTATION)
-          Event.set(ROTATION, &isRotated);
+        {
+            Event.EventCode = ROTATION;
+            Event.Parameters[0] = isRotated;
+        }
 
         else
           Event.set(EventCode);

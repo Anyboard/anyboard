@@ -2,14 +2,15 @@
 
 Haptic::Haptic(int HapticPin)
 {
-  _HapticPin = HapticPin;
+	_HapticPin = HapticPin;
 	pinMode(_HapticPin, OUTPUT);
 	digitalWrite(_HapticPin, LOW);
+	State = INACTIVE;
 }
 
 void Haptic::Vibrate(int ms)
 {
-	  VibrateTime = ms;
+	VibrateTime = ms;
     Haptic_Timing = 0;
     StartVibrate();
 }
@@ -36,10 +37,18 @@ void Haptic::StopVibrate()
     State = INACTIVE;
 }
 
+bool Haptic::getState()
+{
+	if(State == ACTIVE)
+		return true;
+	else
+		return false;
+}
 
 void Haptic::HandleTime(unsigned int  ElapsedTime)
 {
-    Haptic_Timing += ElapsedTime;
+	if(State != INACTIVE)
+		Haptic_Timing += ElapsedTime;
 }
 
 void Haptic::RefreshValues()

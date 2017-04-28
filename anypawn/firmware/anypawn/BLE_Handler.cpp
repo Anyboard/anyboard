@@ -3,6 +3,9 @@
 BLE_Handler::BLE_Handler()//  Default constructor
 {
     Connected = false;
+    
+    String MAC = String(*(uint8_t *)0x100000a4, HEX);
+    AdvertiseName = "AnyPawn_" + MAC;  
 }
 
 // Code that executes everytime token is being connected to
@@ -69,7 +72,11 @@ void BLE_Handler::ReceiveEvent(char *Data, int Lenght)
 // Executes command
 void BLE_Handler::ProcessEvents()
 {
-    extern TokenFeedback tokenFeedback;
+
+
+    String R;
+    String G;
+    String B;
     
     if(Stack.count() == 0)
       return;
@@ -82,6 +89,11 @@ void BLE_Handler::ProcessEvents()
       
     TokenEvent *Ack = new TokenEvent();
     Ack->EventCode = Event->EventCode;
+
+    extern TokenFeedback_Handler TokenFeedback;
+    extern TokenConstraintEvent_Handler TokenConstraintEvent;
+    
+    Serial.print("Event received : "); Serial.print(Event->EventCode); Serial.print("    Param : "); Serial.println(Event->getParameterString()); 
     
     switch (Event->EventCode)
     {
@@ -89,94 +101,52 @@ void BLE_Handler::ProcessEvents()
         Ack->set(GET_NAME, NAME);
         SendEvent(Ack);
       break;
+      
+      case 129:
+
+        R = String(Event->Parameters[0], HEX);
+        if(R.length() == 1)
+          R = String("0") + R;
+        G = String(Event->Parameters[1], HEX);
+        if(G.length() == 1)
+          G = String("0") + G;
+        B = String(Event->Parameters[2], HEX);
+        if(B.length() == 1)
+          B = String("0") + B;
+          
+        TokenFeedback.setColor(String(R+G+B));
+
+        SendEvent(Ack);
+      break;
+
+      case LED_BLINK:
+        TokenFeedback.BlinkLED(Event->Parameters[0]*1000, Event->Parameters[1]*10);
+        Ack->set(130);
+        SendEvent(Ack);
+        break;
         
       case GET_VERSION:
         Ack->set(GET_VERSION, VERSION);
         SendEvent(Ack);
         break;
         
-      case GET_UUID:
-        Ack->set(GET_UUID, UUID);
-        SendEvent(Ack);
-        break;
-        
-      case HAS_LED:
-        Ack->Parameters[1] = 1;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_LED_COLOR:
-        Ack->Parameters[1] = 1;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_VIBRATION:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_COLOR_DETECTION:
-        Ack->Parameters[1] = 1;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_LED_SCREEN:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_RFID:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_NFC:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_ACCELEROMETER:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
-      case HAS_TEMPERATURE:
-        Ack->Parameters[1] = 0;
-        SendEvent(Ack);
-        break;
-        
       case VIBRATE:
-        tokenFeedback.vibrate(Event->Parameters[0] * 10);
-        SendEvent(Ack);
-        break;
-        
-      case COUNT:
-        tokenFeedback.displayCount();
-        SendEvent(Ack);
-        break;
-        
-      case DISPLAY_X:
-        tokenFeedback.displayX();
-        SendEvent(Ack);
-        break;
-        
-      case DISPLAY_W:
-        tokenFeedback.displayW();
-        SendEvent(Ack);
-        break;
-        
-      case DISPLAY_UP:
-        tokenFeedback.displayUp();
-        SendEvent(Ack);
-        break;
-        
-      case DISPLAY_DOWN:
-        tokenFeedback.displayDown();
+        TokenFeedback.Vibrate(Event->Parameters[0] * 10);
         SendEvent(Ack);
         break;
         
       case DISPLAY_DIGIT:
-        tokenFeedback.displayDigit(Event->Parameters[0]);
+        TokenFeedback.DisplayDigit(Event->Parameters[0], 1000);
+        SendEvent(Ack);
+        break;
+                
+      case DISPLAY_PATTERN:
+        TokenFeedback.DisplayPattern((uint8_t*)(Event->Parameters));
+        SendEvent(Ack);
+        break;     
+                   
+      case PAPER_SELECT:
+        TokenConstraintEvent.setPaper(Event->Parameters[0]);
         SendEvent(Ack);
         break;
         
@@ -212,5 +182,12 @@ void TokenEvent::set(uint8_t Code, char* Param)
     {
         Parameters[i] = Param[i];
     }
+}
+
+
+String TokenEvent::getParameterString()
+{
+    String Param = Parameters;
+    return Param;
 }
 

@@ -51,22 +51,11 @@ void setup(void)
 {
   override_uart_limit = true;
   Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES
+  Serial.println("Starting init...");
   interrupts(); // Enable interrupts
-
-  Wire.begin();
-  Wire.beginTransmission(0x08);
-  Wire.write(0x010);
-  Wire.endTransmission();
-  
-  Wire.requestFrom(0x08, 0x1);
-  
-  while(Wire.available())
-    Serial.println(Wire.read(), HEX);
-  
-  while(1);
   
   //Initialization of the Sensors
-  TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
+  //TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
   InertialCentral = new InertialCentral_LSM9DS0();
   TokenColorSensor = new ColorSensor();
   
