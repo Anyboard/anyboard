@@ -366,15 +366,6 @@ void Adafruit_LSM9DS0::write8(boolean type, byte reg, byte value)
     _wire->write(reg);
     _wire->write(value);
     _wire->endTransmission();
-  } else {
-    SPI.beginTransaction(SPISettings(200000, MSBFIRST, SPI_MODE0));
-    digitalWrite(_cs, LOW);
-    // set address
-    spixfer(reg | 0x40); // write multiple
-    spixfer(value); 
-    digitalWrite(_cs, HIGH);
-    SPI.endTransaction();
-
   }
 }
 
@@ -412,18 +403,7 @@ byte Adafruit_LSM9DS0::readBuffer(boolean type, byte reg, byte len, uint8_t *buf
       buffer[i] = _wire->read();
     }
     _wire->endTransmission();
-  } else {
-    SPI.beginTransaction(SPISettings(200000, MSBFIRST, SPI_MODE0));
-    digitalWrite(_cs, LOW);
-    // set address
-    spixfer(reg | 0x80 | 0x40); // read multiple
-    for (uint8_t i=0; i<len; i++) {
-      buffer[i] = spixfer(0);
-    }
-    digitalWrite(_cs, HIGH);
-    SPI.endTransaction();
-
-  }
+  } 
 
   return len;
 }
@@ -433,18 +413,7 @@ uint8_t Adafruit_LSM9DS0::spixfer(uint8_t data) {
   if (_clk == -1) {
       //Serial.println("Hardware SPI");
       return SPI.transfer(data);
-  } else {
-    //Serial.println("Software SPI");
-      uint8_t reply = 0;    for (int i=7; i>=0; i--) {
-      reply <<= 1;
-      digitalWrite(_clk, LOW);
-      digitalWrite(_mosi, data & (1<<i));
-      digitalWrite(_clk, HIGH);
-      if (digitalRead(_miso)) 
-          reply |= 1;
-    }
-    return reply;
-  }
+  } 
 }
 
 void Adafruit_LSM9DS0::getAccelEvent(sensors_event_t* event, uint32_t timestamp) {
