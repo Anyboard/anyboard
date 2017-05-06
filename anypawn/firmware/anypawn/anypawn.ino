@@ -98,23 +98,6 @@ void loop(void)
       TokenConstraintEvent.pollEvent();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////  Private system method used to set the time basis throught a Timer /////////////////////////////////////////
 
 #define TRIGGER_INTERVAL 1000      // ms

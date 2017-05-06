@@ -23,9 +23,9 @@ const uint8_t HAS_TEMPERATURE      = 74;
 const uint8_t READ_COLOR           = 136;
 
 //Token-solo events
-const uint8_t TAP				           = 201; //C9
-const uint8_t DOUBLE_TAP		       = 202; //CA
-const uint8_t SHAKE				         = 203; //CB
+const uint8_t TAP				   = 201; //C9
+const uint8_t DOUBLE_TAP		   = 202; //CA
+const uint8_t SHAKE				   = 203; //CB
 const uint8_t TILT                 = 204; //CC
 const uint8_t ROTATION             = 220;
 
@@ -40,10 +40,10 @@ const uint8_t PAPER_SELECT         = 195;
 const uint8_t COUNT                = 205; //CD
 const uint8_t DISPLAY_PATTERN      = 230; //CE
 const uint8_t VIBRATE              = 200; //C8
-const uint8_t DISPLAY_DIGIT		     = 207;
-const uint8_t DISPLAY_W		   	     = 208;
-const uint8_t DISPLAY_UP		       = 209;
-const uint8_t DISPLAY_DOWN		     = 210;
+const uint8_t DISPLAY_DIGIT		   = 207;
+const uint8_t DISPLAY_W		   	   = 208;
+const uint8_t DISPLAY_UP		   = 209;
+const uint8_t DISPLAY_DOWN		   = 210;
 
 const uint8_t LED_OFF             = 128;
 const uint8_t LED_ON              = 129;
