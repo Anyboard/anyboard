@@ -93,7 +93,8 @@
     /* Internal mapping from commands to uint8 representations */
     rfduinoBluetooth._CMD_CODE = {
         MOVE: 194,
-		TTEVENT: 195,
+		PAPER_SELECT: 195,
+		TTEVENT: 18,
         GET_NAME: 32,
         GET_VERSION: 33,
         GET_UUID: 34,
@@ -116,7 +117,8 @@
 		SHAKE: 203,
 		TILT: 204,
 		COUNT: 205,
-		DISPLAY_X: 206
+		ROTATE: 220,
+		DISPLAY_PATTERN : 230
     };
 
     /* Internal mapping between color strings to Uint8 array of RGB colors */
@@ -220,9 +222,13 @@
             "COUNT",
             rfduinoBluetooth._CMD_CODE.COUNT,
             HAS_PARAMS),
-		DISPLAY_X: rfduinoBluetooth._GenericSend(
-            "DISPLAY_X",
-            rfduinoBluetooth._CMD_CODE.DISPLAY_X,
+		DISPLAY_PATTERN: rfduinoBluetooth._GenericSend(
+            "DISPLAY_PATTERN",
+            rfduinoBluetooth._CMD_CODE.DISPLAY_PATTERN,
+            HAS_PARAMS), 
+		PAPER_SELECT: rfduinoBluetooth._GenericSend(
+            "PAPER_SELECT",
+            rfduinoBluetooth._CMD_CODE.PAPER_SELECT,
             HAS_PARAMS)
     };
 
@@ -313,6 +319,9 @@
                     }*/
                     token.currentTile = currentTile;
                     break;
+				case rfduinoBluetooth._CMD_CODE.PAPER_SELECT:
+					token.trigger('PAPER_SELECT');
+					break;
 				case rfduinoBluetooth._CMD_CODE.TTEVENT:
 					token.trigger('TTEVENT', {'meta-eventType': 'token-token',"token": this});
                     break;
@@ -373,8 +382,8 @@
 				case rfduinoBluetooth._CMD_CODE.COUNT:
                     token.trigger('COUNT')
                     break;
-				case rfduinoBluetooth._CMD_CODE.DISPLAY_X:
-                    token.trigger('DISPLAY_X')
+				case rfduinoBluetooth._CMD_CODE.DISPLAY_PATTERN:
+                    token.trigger('DISPLAY_PATTERN')
                     break;
 				case rfduinoBluetooth._CMD_CODE.TILT:
                     token.trigger('TILT', {'meta-eventType': 'token'});
@@ -387,6 +396,10 @@
                     break;
 				case rfduinoBluetooth._CMD_CODE.SHAKE:
                     token.trigger('SHAKE', {'meta-eventType': 'token'});
+                    break;
+				case rfduinoBluetooth._CMD_CODE.ROTATE:
+					var direction = uint8array[1];
+                    token.trigger('ROTATE', {'meta-eventType': 'token', 'direction' : direction});
                     break;
                 default:
                     token.trigger('INVALID_DATA_RECEIVE', {"value": uint8array});
@@ -470,20 +483,16 @@
         this._COMMANDS.COUNT(token, new Uint8Array(value), win, fail);
     };
 
-	rfduinoBluetooth.displayX = function (token, value, win, fail) {
-        this._COMMANDS.DISPLAY_X(token, new Uint8Array(value), win, fail);
+	rfduinoBluetooth.displayPattern = function (token, pattern, win, fail) {
+			this._COMMANDS.DISPLAY_PATTERN(token, new Uint8Array([pattern[0], pattern[1],  pattern[2], pattern[3],  pattern[4], pattern[5],  pattern[6], pattern[7]]), win, fail);
+    };
+	
+	rfduinoBluetooth.paperSelect = function (token, paper, win, fail) {
+			this._COMMANDS.PAPER_SELECT(token, new Uint8Array([paper]), win, fail);
     };
 
-    rfduinoBluetooth.ledBlink = function (token, value, win, fail) {
-        value = value || 'white';
-
-        if (typeof value === 'string' && value in this._COLORS) {
-            rfduinoBluetooth.ledBlink(token, this._COLORS[value], win, fail);
-        } else if ((value instanceof Array || value instanceof Uint8Array) && value.length === 3) {
-            this._COMMANDS.LED_BLINK(token, new Uint8Array([value[0], value[1], value[2], 30]), win, fail);
-        } else {
-            fail && fail('Invalid or unsupported color parameters');
-        }
+    rfduinoBluetooth.ledBlink = function (token, Time, Period, win, fail) {
+            this._COMMANDS.LED_BLINK(token, new Uint8Array([Time, Period]), win, fail);
     };
 
     rfduinoBluetooth.ledOff = function (token, win, fail) {

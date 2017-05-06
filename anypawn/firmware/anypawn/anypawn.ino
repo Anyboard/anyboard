@@ -9,280 +9,137 @@
   #
 ********************************************************/
 
+
+
 #include <Wire.h>
 #include <WInterrupts.h>
 #include <RFduinoBLE.h>
 #include <string.h>
 
-#include <TokenFeedback.h>
-#include <TokenSoloEvent.h>
-#include <TokenConstraintEvent.h>
-#include "protocol.h"
+#include "BLE_Handler.h"
+#include "TokenSoloEvent_Handler.h"
+#include "TokenConstraintEvent_Handler.h"
+//#include "TokenFeedback_Handler.h"
 
-// TOKEN FIRMWARE METADATA
-#define NAME    "AnyBoard Pawn"
-#define VERSION "0.1"
-#define UUID    "3191-6275-32g4"
-
-// VARIABLES FOR BLUETOOTH
-uint8_t sendData[20];
-uint8_t getData[20];
-bool connected;
-uint8_t cmd;
-int i;
-int len;
-
-// Variables for Token Solo Event
-volatile uint8_t intSource = 0; // byte with interrupt informations
-int tab[] = {'0', '0'};
-int single_tap = 0;
-int double_tap = 0;
-int shake = 0;
-int inactivity = 0;
-
-// Variables for Token Constraint Event
-uint8_t last_sector_ID = 0;
-uint8_t current_sector_ID = 0;
 
 // BOARD CONSTANTS
 #define ACC_INT1_PIN        4 // Pin where the acceleromter interrupt1 is connected
 #define VIBRATING_M_PIN     3 // Pin where the vibrating motor is connected
 
-// Initiation of the objects
-TokenFeedback tokenFeedback = TokenFeedback(VIBRATING_M_PIN); // Connected on pin 2
-TokenConstraintEvent tokenConstraint = TokenConstraintEvent();
-TokenSoloEvent tokenSolo = TokenSoloEvent(ACC_INT1_PIN); // Connected on pin 4
+#define LED_R_PIN           0
+#define LED_G_PIN           1
+#define LED_B_PIN           2
+
+//Variables for timing
+uint_fast16_t volatile number_of_ms = 10;     // ms
+
+// Handlers
+BLE_Handler BLE;
+TokenSoloEvent_Handler TokenSoloEvent(&BLE);
+TokenConstraintEvent_Handler TokenConstraintEvent(&BLE);
+TokenFeedback_Handler TokenFeedback;
+
+// Sensors and actuators
+Accelerometer *TokenAccelerometer = NULL;
+InertialCentral_LSM9DS0 *InertialCentral = NULL;
+ColorSensor *TokenColorSensor = NULL;
+Haptic *HapticMotor = NULL;
+RGB_LED *LED = NULL;
+Matrix8x8 *Matrix = NULL;
+
 
 void setup(void)
 {
-  //SERIAL INTERFACE FOR DEBUGGING PURPOSES
-  Serial.begin(9600);
+  override_uart_limit = true;
+  //Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES Comment if you want to use the LED
+  interrupts(); // Enable interrupts
 
-  // Enable interrupts :
-  interrupts();
+  //Initialization of the Sensors and actuators
+  TokenAccelerometer = new Accelerometer(ACC_INT1_PIN);
+  TokenColorSensor = new ColorSensor();
+  InertialCentral = new InertialCentral_LSM9DS0();
+  HapticMotor = new Haptic(VIBRATING_M_PIN);
+  LED = new RGB_LED(LED_R_PIN, LED_G_PIN, LED_B_PIN, 2); // Type 1 is common anode, Type 2 is common cathode
+  Matrix = new Matrix8x8();
+  
+  // Initialization of the TokenSoloEvent_Handler
+  TokenSoloEvent.setAccelerometer(TokenAccelerometer);
+  TokenSoloEvent.setInertialCentral(InertialCentral);
+  
+  // Initialization of the TokenConstraintEvent_Handler
+  TokenConstraintEvent.setColorSensor(TokenColorSensor);
 
-  // Config of the rgb_sensor
-  tokenConstraint.sensorConfig();
-
-  // Config of the accelerometer
-  tokenSolo.accelConfig();
-
-  // Config of the LED matrix
-  tokenFeedback.matrixConfig();
-
+  //Initialization of the TokenFeedback_Handler
+  TokenFeedback.setRGB_LED(LED);
+  TokenFeedback.setHapticMotor(HapticMotor);
+  TokenFeedback.setMatrix8x8(Matrix);
+  
   // Configure the RFduino BLE properties
-  RFduinoBLE.deviceName = "AnyPawn";
+  char DeviceName[8] = {0};
+  BLE.AdvertiseName.toCharArray(DeviceName, 8);
+  RFduinoBLE.deviceName = DeviceName;
   RFduinoBLE.txPowerLevel = -20;
-
-  // Start the BLE stack
   RFduinoBLE.begin();
+  
   Serial.println("Setup OK!");
+  
+  timer_config();
 }
 
 void loop(void)
 {
-  /************************************************************/
-  // Token solo event detection
-  if (digitalRead(ACC_INT1_PIN))
-  {
-    intSource = tokenSolo.accel.readRegister(ADXL345_REG_INT_SOURCE);
+    BLE.ProcessEvents();
+    TokenFeedback.UpdateFeedback();
+    
+    if(TokenFeedback.isVibrating() == false)
+      TokenSoloEvent.pollEvent();
 
-    // Computation of data from the accelerometer to detect events
-    tokenSolo.accelComputation(tab, bitRead(intSource, 3), bitRead(intSource, 4), bitRead(intSource, 5), bitRead(intSource, 6), &inactivity, &single_tap, &double_tap, &shake);
-  }
-  // Sends the events detected to the game engine
-  if (single_tap)
-  {
-    sendData[0] = TAP;
-    RFduinoBLE.send((char*) sendData, 1);
-    single_tap = 0;
-  }
-  else if (double_tap)
-  {
-    sendData[0] = DOUBLE_TAP;
-    RFduinoBLE.send((char*) sendData, 1);
-    double_tap = 0;
-  }
-  else if (shake)
-  {
-    sendData[0] = SHAKE;
-    RFduinoBLE.send((char*) sendData, 1);
-    shake = 0;
-  }
-  if (tokenSolo.tiltComputation())
-  {
-    //Serial.println("TILT");
-    sendData[0] = TILT;
-    RFduinoBLE.send((char*) sendData, 1);
-  }
-
-  /************************************************************/
-     // Sector detection if the token is on the board
-     if (inactivity)
-     {
-       tokenConstraint.rgb_sensor.getData();
-     }
-
-     Serial.println(map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
-
-     // Location of the pawn in function of the color temperature (ct)
-     current_sector_ID = tokenConstraint.locate(current_sector_ID, map(tokenConstraint.rgb_sensor.ct,0,7000,0,100));
-     //Serial.println(current_sector_ID);
-
-     // Sends sectors ID of the sector that has been left and the sector that has been reached
-     if (current_sector_ID != last_sector_ID)
-    {
-         sendData[0] = MOVE;
-         sendData[1] = current_sector_ID;
-         sendData[2] = last_sector_ID;
-         RFduinoBLE.send((char*) sendData, 3);
-         Serial.print("MOVE_TO: "); Serial.print(sendData[0],DEC); Serial.print(" , "); Serial.print(sendData[1],DEC); Serial.print(" , "); Serial.println(sendData[2],DEC);
-         //RFduinoBLE.sendInt((int) tokenConstraint.rgb_sensor.ct);
-         //RFduinoBLE.sendFloat(tokenConstraint.rgb_sensor.ct);
-         // Update sector_ID variables
-         last_sector_ID = current_sector_ID;
-     }
-    /************************************************************/
-
-  delay(500); // Important delay, do not delete it !
+    if (TokenAccelerometer->isActive() == false)
+      TokenConstraintEvent.pollEvent();
 }
 
-// Code that executes everytime token is being connected to
-void RFduinoBLE_onConnect()
+////////////////////////////  Private system method used to set the time basis throught a Timer /////////////////////////////////////////
+
+#define TRIGGER_INTERVAL 1000      // ms
+
+// This function updates the internal timers of each Handler
+void TIMER1_Interrupt(void)
 {
-  connected = true;
+    if (NRF_TIMER1->EVENTS_COMPARE[0] != 0)
+    {        
+        TokenSoloEvent.HandleTime(number_of_ms);
+        TokenConstraintEvent.HandleTime(number_of_ms);
+        TokenFeedback.HandleTime(number_of_ms);
+        
+        NRF_TIMER1->EVENTS_COMPARE[0] = 0;
+    }
 }
 
-// Code that executes everytime token is being disconnected from
-void RFduinoBLE_onDisconnect()
+// Timer configuration
+void timer_config(void)
 {
-  connected = false;
+    NRF_TIMER1->TASKS_STOP = 1;                                     // Stop timer
+    NRF_TIMER1->MODE = TIMER_MODE_MODE_Timer;                        // sets the timer to TIME mode (doesn't make sense but OK!)
+    NRF_TIMER1->BITMODE = TIMER_BITMODE_BITMODE_16Bit;               // with BLE only Timer 1 and Timer 2 and that too only in 16bit mode
+    NRF_TIMER1->PRESCALER = 9;                                     // Prescaler 9 produces 31250 Hz timer frequency => t = 1/f =>  32 uS
+                                                                     // The figure 31250 Hz is generated by the formula (16M) / (2^n)
+                                                                     // where n is the prescaler value
+                                                                     // hence (16M)/(2^9)=31250
+    NRF_TIMER1->TASKS_CLEAR = 1;                                     // Clear timer
+   
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //        Conversion to make cycle calculation easy
+    //        Since the cycle is 32 uS hence to generate cycles in mS we need 1000 uS
+    //        1000/32 = 31.25  Hence we need a multiplication factor of 31.25 to the required cycle time to achive it
+    //        e.g to get a delay of 10 mS      we would do
+    //        NRF_TIMER2->CC[0] = (10*31)+(10/4);
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   
+    NRF_TIMER1->CC[0] = (number_of_ms * 31) + (number_of_ms / 4);                                                                                  //CC[0] register holds interval count value i.e your desired cycle
+    NRF_TIMER1->INTENSET = TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos;                                     // Enable COMAPRE0 Interrupt
+    NRF_TIMER1->SHORTS = (TIMER_SHORTS_COMPARE0_CLEAR_Enabled << TIMER_SHORTS_COMPARE0_CLEAR_Pos);                             // Count then Complete mode enabled
+    attachInterrupt(TIMER1_IRQn, TIMER1_Interrupt);                                                                            // also used in variant.cpp in the RFduino2.2 folder to configure the RTC1
+    NRF_TIMER1->TASKS_START = 1;                                                                                               // Start TIMER
 }
 
-// Sends data to the connected client
-void send_uint8(uint8_t *data, int length)
-{
-  char charData[length];
-  for (i = 0; i < length; i++) {
-    charData[i] = data[i];
-  }
-  RFduinoBLE.send(charData, length);
-}
 
-// Sends data (uint8 + String) to the connected client
-void send_string(uint8_t command, char* string)
-{
-  len = strlen(string);
-  sendData[0] = command;
-  for (i = 0; i < len; i++) {
-    sendData[i + 1] = string[i];
-  }
-  send_uint8(sendData, len + 1);
-}
-
-// Code to run upon receiving data over bluetooth
-void RFduinoBLE_onReceive(char *data, int length)
-{
-  // Stores the first integer to cmd variable
-  cmd = data[0];
-
-  // Resets the incoming data array
-  memset(getData, 0, sizeof(getData));
-
-  // Stores the rest of the incoming data in getData array
-  for (i = 1; i < length; i++) {
-    getData[i - 1] = data[i];
-  }
-  // Executes the command
-  parse(cmd);
-}
-
-// Executes command
-void parse(uint8_t command)
-{
-  // Resets the outcoming data array
-  memset(sendData, 0, sizeof(sendData));
-
-  // Sets the command as the first data to send
-  sendData[0] = command;
-
-  switch (command)
-  {
-    case GET_NAME:
-      send_string(GET_NAME, NAME);
-      break;
-    case GET_VERSION:
-      send_string(GET_VERSION, VERSION);
-      break;
-    case GET_UUID:
-      send_string(GET_UUID, UUID);
-      break;
-    case HAS_LED:
-      sendData[1] = 1;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_LED_COLOR:
-      sendData[1] = 1;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_VIBRATION:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_COLOR_DETECTION:
-      sendData[1] = 1;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_LED_SCREEN:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_RFID:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_NFC:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_ACCELEROMETER:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case HAS_TEMPERATURE:
-      sendData[1] = 0;
-      send_uint8(sendData, 2);
-      break;
-    case VIBRATE:
-      tokenFeedback.vibrate(getData[0] * 10);
-      send_uint8(sendData, 1);
-      break;
-    case COUNT:
-      tokenFeedback.displayCount();
-      send_uint8(sendData, 1);
-      break;
-    case DISPLAY_X:
-      tokenFeedback.displayX();
-      send_uint8(sendData, 1);
-      break;
-    case DISPLAY_W:
-      tokenFeedback.displayW();
-      send_uint8(sendData, 1);
-      break;
-    case DISPLAY_UP:
-      tokenFeedback.displayUp();
-      send_uint8(sendData, 1);
-      break;
-    case DISPLAY_DOWN:
-      tokenFeedback.displayDown();
-      send_uint8(sendData, 1);
-      break;
-    case DISPLAY_DIGIT:
-      tokenFeedback.displayDigit(getData[0]);
-      send_uint8(sendData, 1);
-      break;
-    default:
-      sendData[0] = 0;
-      send_uint8(sendData, 1);
-  }
-}

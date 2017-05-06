@@ -97,13 +97,37 @@
 						$("#tilt").css("background-color", "#99C2FF");
 					}, 550);
 				};
+				
+				var handleTokenRotate = function(token, data) {
+					
+					AnyBoard.Logger.log("Direction : " + data.direction);
+					if(data.direction == 1)
+					{
+						AnyBoard.Logger.log(" CClk ROTATION Detect ");
+						$("#cclkRot").css("background-color","blue");
+						setTimeout(function () {
+							$("#cclkRot").css("background-color", "#99C2FF");
+						}, 550);
+					}
+					
+					else if(data.direction == 255)
+					{
+						AnyBoard.Logger.log(" Clk ROTATION Detect ");
+						$("#clkRot").css("background-color","blue");
+						setTimeout(function () {
+							$("#clkRot").css("background-color", "#99C2FF");
+						}, 550);
+					}
+				};
+				
 				AnyBoard.TokenManager.onTokenEvent("TAP", handleTokenTap);
 				AnyBoard.TokenManager.onTokenEvent("DOUBLE_TAP", handleTokenDoubleTap);
 				AnyBoard.TokenManager.onTokenEvent("SHAKE", handleTokenShake);
 				AnyBoard.TokenManager.onTokenEvent("TILT", handleTokenTilt);
+				AnyBoard.TokenManager.onTokenEvent("ROTATE", handleTokenRotate);
 
 				var handleTokenMove = function(token, constraint, options) {
-					AnyBoard.Logger.log("Moved to tilee " + constraint);
+					AnyBoard.Logger.log("Moved to tile " + constraint);
 					app.tiles[1] = app.tiles[2];
 					app.tiles[2] = app.locations[constraint];
 					$('.previous_tile').css("background-color", app.tiles[1]);
@@ -148,11 +172,25 @@
 					$("#summary").append('<button type="button" id="' + token.name + '" onclick="app.connect(' + "'" + token.name + "'" + ')" class="grey">' + token.name + ' </button><br />');
 
 					// Add listener to be executed if the token connects
-                    token.on('connect', function() {
+                    token.on('connect', function() { 
                         document.getElementById(token.name).className = 'green';
-						$("#token_feedback").append('<button type="button" onclick="app.vibrate('+ "'" + token.name + "'" +')" class="indicator3"> Vibrate </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.vibrate('+ "'" + token.name + "'" +')" class="indicator3"> Vibrate </button><br />'); 
 						$("#token_feedback").append('<button type="button" onclick="app.count('+ "'" + token.name + "'" +')" class="indicator3"> Count </button><br />');
-						$("#token_feedback").append('<button type="button" onclick="app.displayX('+ "'" + token.name + "'" +')"class="indicator3"> Display a cross </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.displayPattern('+ "'" + token.name + "'" +', [0x00, 0x24, 0x24, 0x24, 0, 0x42, 0x3C, 0]' + ')"class="indicator3"> Pattern </button><br/>');
+						
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'green' +"'" +')"class="indicator green"> LED Green </button>');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'red' +"'" +')"class="indicator red"> LED Red </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'blue' +"'" +')"class="indicator blue"> LED Blue </button>');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'white' +"'" +')"class="indicator white"> LED White </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'pink' +"'" +')"class="indicator pink"> LED Pink </button>');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'yellow' +"'" +')"class="indicator yellow"> LED Yellow </button><br />');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'aqua' +"'" +')"class="indicator aqua"> LED Aqua </button>');
+						$("#token_feedback").append('<button type="button" onclick="app.ledGreen('+ "'" + token.name + "'" +' , '+ "'" + 'off' +"'" +')"class="indicator black"> LED Off </button><br/><br/> ');
+						
+						$("#token_feedback").append('<button type="button" onclick="app.blinkLED('+ "'" + token.name + "'" +' , 3, 20)"class="indicator3 grey"> LED Blink </button><br/><br/> ');
+						
+						$("#token_feedback").append('<button type="button" onclick="app.selectPaper('+ "'" + token.name + "'" +' , 2)"class="indicator3 grey"> Inkjet Board </button><br/><br/> ');
+						$("#token_feedback").append('<button type="button" onclick="app.selectPaper('+ "'" + token.name + "'" +' , 1)"class="indicator3 grey"> Laser Board </button><br/><br/> ');
                     });
 
                     // Add listener to be executed if the token disconnects
@@ -210,6 +248,72 @@
 				);
             },
 
+            // Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
+            sendPaperCmd: function(token, paper) {
+
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the PAPER_SELECT command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the PAPER_SELECT command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.paperSelect(paper, // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+			
+			// Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
+            sendLEDCmd: function(token, data) {
+				var color = data;	
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the LED command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the LED command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.ledOn(color, // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+			
+			// Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
+            sendLEDBlinkCmd: function(token, Time, Period) {
+				
+                // Function to be executed when LED is successfully turned on
+                var completedFunction = function(data){
+                    hyper.log("We happily send the LED command");
+                    hyper.log(data)
+                };
+
+                // Function to be executed upon failure of LED
+                var errorCallback = function(errorMsg) {
+                    hyper.log("Failed to send the LED command");
+                    hyper.log(errorMsg);
+                };
+
+				// Turns on token led.
+				token.ledBlink(Time, Period, // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+					completedFunction,  // function to be executed when token signals
+					errorCallback  // function to be executed in case of failure to send command to token
+				);
+            },
+
 			// Send green led command. Works on every token with a AnyBoard compatible driver and firmware.
             sendCountCmd: function(token) {
 
@@ -232,22 +336,22 @@
 				);
             },
 
-			sendDisplayXCmd: function(token) {
+			sendDisplayPatternCmd: function(token, pattern) {
 
                 // Function to be executed when LED is successfully turned on
                 var completedFunction = function(data){
-                    hyper.log("We happily send the DISPLAY_X command");
+                    hyper.log("We happily send the DISPLAY_PATTERN command");
                     hyper.log(data)
                 };
 
                 // Function to be executed upon failure of LED
                 var errorCallback = function(errorMsg) {
-                    hyper.log("Failed to send the DISPLAY_X command");
+                    hyper.log("Failed to send the DISPLAY_PATTERN command");
                     hyper.log(errorMsg);
                 };
 
 				// Turns on token led.
-				token.displayX([1], // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
+				token.displayPattern(pattern, // Instead of "green" color, on could also use array, e.g. [0, 255, 0]
 					completedFunction,  // function to be executed when token signals
 					errorCallback  // function to be executed in case of failure to send command to token
 				);
@@ -268,9 +372,24 @@
 				this.sendCountCmd(token);
 			},
 
-			displayX : function(tokenName){
+			displayPattern : function(tokenName, pattern){
 				var token = this.devices[tokenName];
-				this.sendDisplayXCmd(token);
+				this.sendDisplayPatternCmd(token, pattern);
+			},
+
+			ledGreen : function(tokenName, color){
+				var token = this.devices[tokenName];
+				this.sendLEDCmd(token, color); 
+			},
+
+			blinkLED : function(tokenName, Time, Period){
+				var token = this.devices[tokenName];
+				this.sendLEDBlinkCmd(token, Time, Period); 
+			},
+
+			selectPaper : function(tokenName, Paper){
+				var token = this.devices[tokenName];
+				this.sendPaperCmd(token, Paper); 
 			}
 
 	    };
@@ -300,7 +419,7 @@
 		<button type="button" class="black" onclick="app.discover()">
 			Discover Bluetooth devices
 		</button>
-
+ 
 	</div>
 	<div id="main">
 		<div id="token_solo">
@@ -315,14 +434,23 @@
 				<div id="shake" class="indicator">
 					Shake
 				</div>
-				<div id="tilt" class="indicator"">
+				<div id="tilt" class="indicator">
 					Tilt
+				</div>
+				<div id="cclkRot" class="indicator">
+					C. Clockwise Rot
+				</div>
+				<div id="clkRot" class="indicator">
+					Clockwise Rot
 				</div>
 			</div>
 		</div>
+        
+        </br>
+        </br>
+        </br>
 		<div id="token_feedback">
-			<h1> Token Feedback </h1>
-
+			<h1> Token Feedback </h1> 
 		</div>
 
 		<div id="token_constraint">
@@ -336,6 +464,8 @@
 				<div id="color" class="current_tile">
 				</div>
 			</div>
+            
+
 		</div>
 
 		<div id="token_token">
