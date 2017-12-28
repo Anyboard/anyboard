@@ -1,0 +1,6 @@
+{
+    "sketch": "anypawn.ino",
+    "board": "RFduino:RFduino:RFduino",
+    "output": "../../../../temp-mscode/vsoutput",
+    "port": "/dev/cu.usbserial-DN006NNU"
+}
