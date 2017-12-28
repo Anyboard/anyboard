@@ -102,7 +102,7 @@ void BLE_Handler::ProcessEvents()
         SendEvent(Ack);
       break;
       
-      case 129:
+      case LED_ON:
 
         R = String(Event->Parameters[0], HEX);
         if(R.length() == 1)

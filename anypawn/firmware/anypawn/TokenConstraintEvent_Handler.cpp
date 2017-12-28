@@ -3,22 +3,23 @@
 TokenConstraintEvent_Handler::TokenConstraintEvent_Handler(BLE_Handler *Handler)   //default constructor
 {
     BLE = Handler;
-    
     CurrentSector_ID = LastSector_ID = 0;
     _ColorSensor = NULL;
     ColorSensor_Timing = 0;
-	
 	  Paper = INK;
 }
-
 
 void TokenConstraintEvent_Handler::setPaper(int pPaper)
 {
     if(pPaper == INK || pPaper == LASER)
       Paper = pPaper;
-
     else
       Paper = 0;
+}
+
+void TokenConstraintEvent_Handler::setColorSensor(ColorSensor *Sensor)  // Set the private member _Accelerometer with an existing instance of an Accelerometer object
+{
+    _ColorSensor = Sensor;
 }
 
 void TokenConstraintEvent_Handler::HandleTime(unsigned int ElapsedTime)
@@ -55,16 +56,8 @@ void TokenConstraintEvent_Handler::pollEvent()    // If an event has occured ret
 }
 
 
-
-void TokenConstraintEvent_Handler::setColorSensor(ColorSensor *Sensor)  // Set the private member _Accelerometer with an existing instance of an Accelerometer object
-{
-    _ColorSensor = Sensor;
-}
-
-
 uint8_t TokenConstraintEvent_Handler::Locate(int ct, int cl)
 {  
-
 	if(Paper == LASER)
 	{
 		if (ct<=70 +1 && ct>=70 -1 && cl<=90 +DMIN && cl >=90 -DMIN)

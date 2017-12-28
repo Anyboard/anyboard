@@ -1,11 +1,8 @@
 /********************************************************
   # NAME: RFduino_token.ino
-  # AUTHOR: Matthias Monnier (matthias.monnier@gmail.com), Simone Mora (simonem@ntnu.no)
-  # DATE: 16/12/2015
+  # AUTHOR:  Simone Mora (simonem@ntnu.no), Matthias Monnier, Theo Hyvon
+  # DATE: 28/12/2017
   # LICENSE: Apache V2.0(cf. file license.txt in the main repository)
-  #
-  # Firmware of the pawn token in the AnyBoard project.
-  # V01 - Removed token-token interaction, moved libraries in sketch folder
   #
 ********************************************************/
 
@@ -19,7 +16,6 @@
 #include "BLE_Handler.h"
 #include "TokenSoloEvent_Handler.h"
 #include "TokenConstraintEvent_Handler.h"
-//#include "TokenFeedback_Handler.h"
 
 
 // BOARD CONSTANTS
@@ -135,7 +131,7 @@ void timer_config(void)
     //        NRF_TIMER2->CC[0] = (10*31)+(10/4);
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    
-    NRF_TIMER1->CC[0] = (number_of_ms * 31) + (number_of_ms / 4);                                                                                  //CC[0] register holds interval count value i.e your desired cycle
+    NRF_TIMER1->CC[0] = (number_of_ms * 31) + (number_of_ms / 4);                                                              //CC[0] register holds interval count value i.e your desired cycle
     NRF_TIMER1->INTENSET = TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos;                                     // Enable COMAPRE0 Interrupt
     NRF_TIMER1->SHORTS = (TIMER_SHORTS_COMPARE0_CLEAR_Enabled << TIMER_SHORTS_COMPARE0_CLEAR_Pos);                             // Count then Complete mode enabled
     attachInterrupt(TIMER1_IRQn, TIMER1_Interrupt);                                                                            // also used in variant.cpp in the RFduino2.2 folder to configure the RTC1

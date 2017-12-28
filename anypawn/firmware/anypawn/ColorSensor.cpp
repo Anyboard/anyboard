@@ -45,12 +45,12 @@ void ColorSensor::RefreshValues() // This function has to be adapted to the curr
     
     BatteryFiltered /= FIR_BATTERY_SAMPLES;  
 
+    //Here we get color data
     rgb_sensor.getData();
     
     Red = rgb_sensor.r / rgb_sensor.againx;
     Green = rgb_sensor.g / rgb_sensor.againx;
     Blue = rgb_sensor.b / rgb_sensor.againx;
-    
     
     float CorrectionFactor = getCorrectionFactor(BatteryFiltered);
     
@@ -74,18 +74,15 @@ void ColorSensor::RefreshValues() // This function has to be adapted to the curr
 float ColorSensor::getCorrectionFactor(long BatteryVoltage)
 {
     int Index = 0;
-
     if(BatteryVoltage > 365)
       return float(CorrectionFactor[0]) /10000.0;
 
     else if(BatteryVoltage < 250)
-      return float(CorrectionFactor[CorrectionFactor_NB_Samples -1]) /10000.0;
-      
+      return float(CorrectionFactor[CorrectionFactor_NB_Samples -1]) /10000.0; 
     for(int i = 365; BatteryVoltage - i < 0; i--)
     {
         Index++;  
     }
-
     return float(CorrectionFactor[Index]) /10000.0;
 }
 
