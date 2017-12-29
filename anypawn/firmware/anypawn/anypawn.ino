@@ -47,7 +47,7 @@ Matrix8x8 *Matrix = NULL;
 void setup(void)
 {
   override_uart_limit = true;
-  //Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES Comment if you want to use the LED
+  Serial.begin(9600); //SERIAL INTERFACE FOR DEBUGGING PURPOSES Comment if you want to use the LED
   interrupts(); // Enable interrupts
 
   //Initialization of the Sensors and actuators

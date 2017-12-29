@@ -43,8 +43,9 @@ void BLE_Handler::SendEvent(TokenEvent* Event)
     {
       sendData[i + 1] = Event->Parameters[i];
     }
-
+  
     RFduinoBLE.send(sendData, 1+ Length);
+    Serial.print("Event sent: ");Serial.print(sendData[0],DEC);Serial.print(" , ");Serial.println(sendData[1],DEC);
 }
 
 // Code to run upon receiving data over bluetooth
