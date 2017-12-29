@@ -19,13 +19,10 @@ class BLE_Handler
       void ReceiveEvent(char *Data, int Lenght);
       void ProcessEvents();
       void Emit(TokenEvent *Event);
-
       String AdvertiseName;
-
       bool Connected;
       bool EventReceived;   // true if an event has been Received, cleared with a call to ProcessEvents()
-      bool EventToSend;     // true if there are events waiting to be send
-      
+      bool EventToSend;     // true if there are events waiting to be send    
     private:            
       StackArray<TokenEvent*> Stack;   
 };
@@ -35,12 +32,8 @@ class TokenEvent
   public:
     TokenEvent();
     void set(uint8_t Code, char* Param = NULL);
-
-    String getParameterString();
-    
+    String getParameterString();   
     uint8_t EventCode;
-    char Parameters[19];
-     
+    char Parameters[19];     
 };
-
 #endif

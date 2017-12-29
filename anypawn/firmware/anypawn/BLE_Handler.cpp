@@ -13,6 +13,7 @@ void RFduinoBLE_onConnect()
 {
     extern BLE_Handler BLE;
     BLE.Connected = true;
+    Serial.println("Pawn connected to device.");
 }
 
 // Code that executes everytime token is being disconnected from
@@ -20,6 +21,7 @@ void RFduinoBLE_onDisconnect()
 {
     extern BLE_Handler BLE;
     BLE.Connected = false;
+    Serial.println("Pawn disconnected from device");
 }
 
 void BLE_Handler::Emit(TokenEvent *Event)
@@ -58,14 +60,12 @@ void RFduinoBLE_onReceive(char *data, int length)
 void BLE_Handler::ReceiveEvent(char *Data, int Lenght)
 { 
     TokenEvent *NewEvent = new TokenEvent();
-    NewEvent->EventCode = Data[0];
-    
+    NewEvent->EventCode = Data[0];   
     // Stores the rest of the incoming data in the Parameters field
     for (int i = 1; i < Lenght; i++)
     {
       NewEvent->Parameters[i-1] = Data[i];
     }
-  
     //Adding Event to the stack
     Stack.push(NewEvent);
 }
@@ -73,8 +73,6 @@ void BLE_Handler::ReceiveEvent(char *Data, int Lenght)
 // Executes command
 void BLE_Handler::ProcessEvents()
 {
-
-
     String R;
     String G;
     String B;
@@ -102,9 +100,11 @@ void BLE_Handler::ProcessEvents()
         Ack->set(GET_NAME, NAME);
         SendEvent(Ack);
       break;
-      
+      case GET_VERSION:
+        Ack->set(GET_VERSION, VERSION);
+        SendEvent(Ack);
+      break;
       case LED_ON:
-
         R = String(Event->Parameters[0], HEX);
         if(R.length() == 1)
           R = String("0") + R;
@@ -113,21 +113,14 @@ void BLE_Handler::ProcessEvents()
           G = String("0") + G;
         B = String(Event->Parameters[2], HEX);
         if(B.length() == 1)
-          B = String("0") + B;
-          
+        B = String("0") + B;     
         TokenFeedback.setColor(String(R+G+B));
-
         SendEvent(Ack);
       break;
 
       case LED_BLINK:
         TokenFeedback.BlinkLED(Event->Parameters[0]*1000, Event->Parameters[1]*10);
         Ack->set(130);
-        SendEvent(Ack);
-        break;
-        
-      case GET_VERSION:
-        Ack->set(GET_VERSION, VERSION);
         SendEvent(Ack);
         break;
         
@@ -157,12 +150,7 @@ void BLE_Handler::ProcessEvents()
     }
 }
 
-
-
-
 /***************************************/
-
-
 
 TokenEvent::TokenEvent()
 {
@@ -184,7 +172,6 @@ void TokenEvent::set(uint8_t Code, char* Param)
         Parameters[i] = Param[i];
     }
 }
-
 
 String TokenEvent::getParameterString()
 {

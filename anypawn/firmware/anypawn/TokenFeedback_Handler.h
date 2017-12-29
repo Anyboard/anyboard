@@ -30,7 +30,6 @@ class TokenFeedback_Handler
     private:
       Haptic *HapticMotor;
       bool HapticAvailable;
-      
 
       RGB_LED *LED;
       bool RGB_LEDAvailable;
@@ -38,6 +37,5 @@ class TokenFeedback_Handler
 
       bool MatrixAvailable;
       Matrix8x8 *Matrix;
-      
 };
 

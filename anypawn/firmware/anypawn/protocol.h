@@ -21,15 +21,13 @@ const uint8_t ROTATION             = 220;
 
 //Token-constraint events
 const uint8_t MOVE                 = 194; //C2 (+ 2nd and 3rd bytes for current and last sector)
-
 const uint8_t PAPER_SELECT         = 195;
 
 //Token-token events
 //TBD
 
 //feedbacks
-const uint8_t VIBRATE              = 200; //C8
-
+const uint8_t VIBRATE              = 200; //C8 (+ 2nd and 3rd bypte for time and period)
 const uint8_t DISPLAY_PATTERN      = 230; //CE
 const uint8_t DISPLAY_DIGIT		   = 207;
 

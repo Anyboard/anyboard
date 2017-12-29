@@ -15,7 +15,6 @@ TokenSoloEvent_Handler::TokenSoloEvent_Handler(BLE_Handler *Handler)   //default
     InertialCentral_Timing = 0;
 }
 
-
 void TokenSoloEvent_Handler::HandleTime(unsigned int ElapsedTime)
 {
     Accelerometer_Timing += ElapsedTime;  
@@ -106,8 +105,6 @@ int TokenSoloEvent_Handler::pollEvent()    // If an event has occured returns th
     return EventCode;
 }
 
-
-
 void TokenSoloEvent_Handler::setAccelerometer(Accelerometer *Acc)  // Set the private member _Accelerometer with an existing instance of an Accelerometer object
 {
     _Accelerometer = Acc;
@@ -119,6 +116,3 @@ void TokenSoloEvent_Handler::setInertialCentral(InertialCentral_LSM9DS0 *InC)  /
     _InertialCentral = InC;
     _InertialCentralAvailable = InC->SensorAvailable;
 }
-
-
-

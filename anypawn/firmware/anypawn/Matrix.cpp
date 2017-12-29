@@ -37,7 +37,6 @@ void Matrix8x8::RefreshValues()
 	}
 }
 
-
 void Matrix8x8::setPattern(int ID, uint8_t *Pattern)
 {
 	for(int i = 0; i < 8; i++)

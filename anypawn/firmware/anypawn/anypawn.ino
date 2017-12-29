@@ -6,13 +6,10 @@
   #
 ********************************************************/
 
-
-
 #include <Wire.h>
 #include <WInterrupts.h>
 #include <RFduinoBLE.h>
 #include <string.h>
-
 #include "BLE_Handler.h"
 #include "TokenSoloEvent_Handler.h"
 #include "TokenConstraintEvent_Handler.h"
@@ -78,7 +75,7 @@ void setup(void)
   RFduinoBLE.begin();
   
   Serial.println("Setup OK!");
-  
+
   timer_config();
 }
 

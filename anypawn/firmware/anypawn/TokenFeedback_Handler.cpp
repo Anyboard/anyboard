@@ -121,8 +121,6 @@ void TokenFeedback_Handler::DisplayDigit(int Digit, int Time)
       Matrix->DisplayDigit(Digit, Time);
 }
 
-
-
 void TokenFeedback_Handler::DisplayPattern(uint8_t *Pattern)
 {
     Matrix->setPattern(0, Pattern);
