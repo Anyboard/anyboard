@@ -175,7 +175,7 @@
                             });
                             if (driver) {
                                 device.serialChar = characteristic.handle;
-                                token.setDriver(driver);
+                                token.driver = driver;
                             }
                         }
 
@@ -193,7 +193,7 @@
                                 if (driver) {
                                     device.serialChar = characteristic.handle;
                                     device.serialDesc = descriptor.handle;
-                                    token.setDriver(driver);
+                                    token.driver = driver;
                                 }
                             }
                         }
