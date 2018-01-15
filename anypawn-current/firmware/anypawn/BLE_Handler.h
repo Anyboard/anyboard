@@ -20,6 +20,7 @@ class BLE_Handler
       void ProcessEvents();
       void Emit(TokenEvent *Event);
       String AdvertiseName;
+      String MAC;
       bool Connected;
       bool EventReceived;   // true if an event has been Received, cleared with a call to ProcessEvents()
       bool EventToSend;     // true if there are events waiting to be send    

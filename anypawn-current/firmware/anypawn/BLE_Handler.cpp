@@ -4,8 +4,8 @@ BLE_Handler::BLE_Handler()//  Default constructor
 {
     Connected = false;
     
-    String MAC = String(*(uint8_t *)0x100000a4, HEX);
-    AdvertiseName = "AnyPawn_" + MAC;  
+    MAC = String(*(uint8_t *)0x100000a4, HEX);
+    AdvertiseName = "AnyP_" + MAC;  
 }
 
 // Code that executes everytime token is being connected to

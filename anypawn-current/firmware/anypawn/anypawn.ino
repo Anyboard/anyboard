@@ -68,7 +68,13 @@ void setup(void)
   TokenFeedback.setMatrix8x8(Matrix);
   
   // Configure the RFduino BLE properties
+  
   char DeviceName[8] = {0};
+
+  //String MAC = String(*(uint8_t *)0x100000a4, HEX);
+  //String suffix = "AnyPawn";
+  //AdvertiseName = suffix + MAC
+  
   BLE.AdvertiseName.toCharArray(DeviceName, 8);
   RFduinoBLE.deviceName = DeviceName;
   RFduinoBLE.txPowerLevel = -20;
